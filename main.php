@@ -1,3 +1,50 @@
+<?php @session_start();
+	// Control de sesión inciada
+	if(!isset($_SESSION['nick'])){
+		header("Location: index.php");
+		die();
+	} else {
+include_once("inc/conDB.php");
+conexionDB();
+mysqli_set_charset($_SESSION['con'], 'utf8');
+
+function mostrar_lista() {
+	$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND NOT (`asignatura_id`= 4 OR `asignatura_id`= 38) ORDER BY `id` DESC LIMIT 20");
+	while ($seleccionada = mysqli_fetch_object($docs_tabla)) {
+		$petnomuser = mysqli_query($_SESSION['con'], "SELECT user_nick FROM `ap_users` WHERE `ID` = ". $seleccionada->usuario_id . "");
+		$consnomuser = mysqli_fetch_object($petnomuser);
+		$sql_asignatura = mysqli_query($_SESSION['con'], "SELECT opcion FROM `ap_asignaturas` WHERE `ID` = ". $seleccionada->asignatura_id . "");
+		$pet_asignatura = mysqli_fetch_object($sql_asignatura);
+		if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1')
+      {
+      $uploader = "Anónimo";
+      }  
+      else {
+      $uploader = $consnomuser->user_nick;
+      }
+    echo '<tr>';
+    echo '<td><center>' . urldecode($seleccionada->nombre) . '</center></td>';
+    echo '<td><center>' . $pet_asignatura->opcion . '</center></td>';
+		echo '<td><center>Titulación</center></td>';
+		echo '<td><center>' . $uploader . '</center></td>';
+		echo '<td><center><a href="'. $seleccionada->file .'" onclick="window.open(\'descargar.php?id='. $seleccionada->id .'\')" target="_blank"><i class="fa fa-chevron-circle-down fa-2x"></i></a></center></td>';
+		echo '</tr>';  
+  }
+}
+
+// Datos para la cabecera de la página principal
+// Archivos subidos por el usuario
+$sql_head_subidas = "SELECT COUNT(id) AS subidas FROM `ap_documentos` WHERE `usuario_id`= ".$_SESSION['id']."";
+$result_head_subidas = mysqli_query($_SESSION['con'],$sql_head_subidas);
+$head_subidas = mysqli_fetch_assoc($result_head_subidas);
+
+// Descargas de los archivos del usuario
+$sql_head_descargas = "SELECT SUM(descargas) AS descargas FROM `ap_documentos` WHERE `usuario_id`= ".$_SESSION['id']."";
+$result_head_descargas = mysqli_query($_SESSION['con'],$sql_head_descargas);
+$head_descargas = mysqli_fetch_assoc($result_head_descargas);
+
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -23,85 +70,7 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <!------------->
-	<!-- Sidebar -->
-	<!------------->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Logo -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3">Apuntomatic</div>
-      </a>
-      <hr class="sidebar-divider my-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Portada</span></a>
-      </li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Apuntomatic
-      </div>
-		<li class="nav-item">
-        <a class="nav-link" href="apuntes.html">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Buscar apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="subir.html">
-          <i class="fas fa-fw fa-file-upload "></i>
-          <span>Subir apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="ranking.html">
-          <i class="fas fa-fw fa-trophy"></i>
-          <span>Ranking</span></a>
-		</li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Config
-      </div>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Perfil</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.html">Mi perfil</a>
-            <a class="collapse-item" href="perfil-edit.html">Editar</a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="ads.html">
-          <i class="fas fa-fw fa-ad"></i>
-          <span>Publicidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="admin.html">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>Admin</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="privacidad.html">
-          <i class="fas fa-fw fa-user-shield"></i>
-          <span>Privacidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="cerrar.html">
-          <i class="fas fa-fw fa-sign-out-alt "></i>
-          <span>Cerrar sesión</span></a>
-      </li>
-      <hr class="sidebar-divider d-none d-md-block">
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!----------------->
-	<!-- Fin Sidebar -->
-	<!----------------->
+  <?php include "sidebar.php" ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -150,7 +119,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Archivos subidos</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">135</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $head_subidas['subidas']; ?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-upload fa-2x text-gray-300"></i>
@@ -167,7 +136,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Descargas de tus archivos</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">1.235</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $head_descargas['descargas']; ?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-download fa-2x text-gray-300"></i>
@@ -184,7 +153,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Votos positivos</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">4.800</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">##</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-star fa-2x text-gray-300"></i>
@@ -201,7 +170,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Ranking</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">##</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-trophy fa-2x text-gray-300"></i>
@@ -232,7 +201,7 @@
                       <th>Documento</th>
                       <th>Asignatura</th>
                       <th>Titulación</th>
-					  <th>Usuario</th>
+					            <th>Usuario</th>
                       <th>Enlace</th>
                     </tr>
                   </thead>
@@ -241,60 +210,12 @@
                       <th>Documento</th>
                       <th>Asignatura</th>
                       <th>Titulación</th>
-					  <th>Usuario</th>
+					            <th>Usuario</th>
                       <th>Enlace</th>
                     </tr>
                   </tfoot>
                   <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>2011/04/25</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
-                    <tr>
-                      <td>Garrett Winters</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>2011/07/25</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
-                    <tr>
-                      <td>Ashton Cox</td>
-                      <td>Junior Technical Author</td>
-                      <td>San Francisco</td>
-                      <td>2009/01/12</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
-                    <tr>
-                      <td>Cedric Kelly</td>
-                      <td>Senior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>2012/03/29</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
-                    <tr>
-                      <td>Airi Satou</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>2008/11/28</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
-                    <tr>
-                      <td>Brielle Williamson</td>
-                      <td>Integration Specialist</td>
-                      <td>New York</td>
-                      <td>2012/12/02</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
-                    <tr>
-                      <td>Herrod Chandler</td>
-                      <td>Sales Assistant</td>
-                      <td>San Francisco</td>
-                      <td>2012/08/06</td>
-                      <td><center><a href="#"><i class="fas fa-file-download"></i> 14 Mb</a></center></td>
-                    </tr>
+                    <?php mostrar_lista(); ?>
                   </tbody>
                 </table>
               </div>
@@ -356,5 +277,5 @@
   <script src="js/tablas-apuntomatic.js"></script>
 
 </body>
-
 </html>
+<?php } ?>   
