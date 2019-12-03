@@ -4,6 +4,12 @@ ob_start();
 include("inc/conDB.php");
 conexionDB();
 $tbl_name="ap_users"; // Table name
+// Comprobamos si hay una sesión iniciada
+if(isset($_SESSION['nick'])){
+  header("Location: main.php");
+  die();
+} else {}
+
 // Comprobamos si se ha enviado el formulario
   if (isset ($_POST['nick'])){
     // Define $nick and $password
