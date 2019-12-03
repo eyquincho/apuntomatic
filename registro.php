@@ -1,3 +1,15 @@
+<?php
+session_start();
+ob_start();
+include("inc/conDB.php");
+conexionDB();
+$tbl_name="ap_users"; // Table name
+// Comprobamos si hay una sesión iniciada
+if(isset($_SESSION['nick'])){
+  header("Location: main.php");
+  die();
+} else {}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
