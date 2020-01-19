@@ -81,27 +81,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
         <!----------------->
 		<!----Cabecera----->
 		<!----------------->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-            <div class="topbar-divider d-none d-sm-block"></div>
-
-            <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong>Usuario</strong></span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-            </li>
-
-          </ul>
-
-        </nav>
+          <?php include "header.php" ?>
         <!----------------->
 		<!---Fin Cabecera-->
 		<!----------------->
@@ -112,7 +92,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
           <!-- Content Row -->
           <div class="row">
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- Tarjeta subidas -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
@@ -129,7 +109,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- Tarjeta descargas -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
@@ -146,7 +126,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- Tarjeta votos positivos, desactivado
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -161,9 +141,9 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <!-- Pending Requests Card Example -->
+            <!-- Tarjeta ranking, desactivado
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
@@ -178,7 +158,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
 
           <!-- Content Row -->

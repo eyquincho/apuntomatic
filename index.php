@@ -35,6 +35,10 @@ if(isset($_SESSION['nick'])){
     $_SESSION['nick']= $_POST['nick'];
     $_SESSION["id"]= $sql_id->ID;
     $_SESSION["admin"]= $sql_id->user_admin;
+	// Guardamos el hash del email para Gravatar
+	$md5email = trim ($sql_id->user_email); // "MyEmailAddress@example.com"
+	$md5email = strtolower( $md5email ); // "myemailaddress@example.com"
+	$_SESSION["emailhash"]= md5( $md5email );
     header("location:../apuntomatic/main.php");
     }
     else {
