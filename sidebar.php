@@ -4,7 +4,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Logo -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <div class="sidebar-brand-text mx-3">Apuntomatic</div>
       </a>
       <hr class="sidebar-divider my-0">
@@ -18,7 +18,7 @@
         Apuntomatic
       </div>
 		<li class="nav-item">
-        <a class="nav-link" href="apuntes.html">
+        <a class="nav-link" href="apuntes.php">
           <i class="fas fa-fw fa-folder"></i>
           <span>Buscar apuntes</span></a>
 		</li>
@@ -64,7 +64,7 @@
           <span>Privacidad</span></a>
       </li>
 	  <li class="nav-item">
-        <a class="nav-link" href="cerrar.html">
+        <a class="nav-link" href="inc/cerrar.php">
           <i class="fas fa-fw fa-sign-out-alt "></i>
           <span>Cerrar sesión</span></a>
       </li>

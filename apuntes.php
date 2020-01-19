@@ -1,3 +1,13 @@
+<?php @session_start();
+	// Control de sesión inciada
+	if(!isset($_SESSION['nick'])){
+		header("Location: index.php");
+		die();
+	} else {
+include_once("inc/conDB.php");
+conexionDB();
+mysqli_set_charset($_SESSION['con'], 'utf8');
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,13 +19,13 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Apuntomatic - Apuntes</title>
+  <title>Apuntomatic</title>
 
   <!-- Llamadas CSS -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link href="css/sb-admin-2.css" rel="stylesheet">
-  <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -23,85 +33,7 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <!------------->
-	<!-- Sidebar -->
-	<!------------->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Logo -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3">Apuntomatic</div>
-      </a>
-      <hr class="sidebar-divider my-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Portada</span></a>
-      </li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Apuntomatic
-      </div>
-		<li class="nav-item">
-        <a class="nav-link" href="apuntes.html">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Buscar apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="subir.html">
-          <i class="fas fa-fw fa-file-upload "></i>
-          <span>Subir apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="ranking.html">
-          <i class="fas fa-fw fa-trophy"></i>
-          <span>Ranking</span></a>
-		</li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Config
-      </div>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Perfil</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.html">Mi perfil</a>
-            <a class="collapse-item" href="perfil-edit.html">Editar</a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="ads.html">
-          <i class="fas fa-fw fa-ad"></i>
-          <span>Publicidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="admin.html">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>Admin</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="privacidad.html">
-          <i class="fas fa-fw fa-user-shield"></i>
-          <span>Privacidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="cerrar.html">
-          <i class="fas fa-fw fa-sign-out-alt "></i>
-          <span>Cerrar sesión</span></a>
-      </li>
-      <hr class="sidebar-divider d-none d-md-block">
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!----------------->
-	<!-- Fin Sidebar -->
-	<!----------------->
+  <?php include "sidebar.php" ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -112,32 +44,12 @@
         <!----------------->
 		<!----Cabecera----->
 		<!----------------->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-            <div class="topbar-divider d-none d-sm-block"></div>
-
-            <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong>Usuario</strong></span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-            </li>
-
-          </ul>
-
-        </nav>
+	  <?php include "header.php" ?>
         <!----------------->
 		<!---Fin Cabecera-->
 		<!----------------->
 
-        <!-- Begin Page Content -->
+               <!-- Begin Page Content -->
         <div class="container-fluid">
 
           <!-- Content Row -->
@@ -337,5 +249,5 @@
   <script src="js/tablas-apuntomatic.js"></script>
 
 </body>
-
 </html>
+<?php } ?>   
