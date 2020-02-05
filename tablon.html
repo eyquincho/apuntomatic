@@ -9,13 +9,33 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Apuntomatic - Apuntes</title>
+  <title>Apuntomatic - Tablón</title>
 
   <!-- Llamadas CSS -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link href="css/sb-admin-2.css" rel="stylesheet">
   <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <style>
+	.card {
+		display:none;
+	}
+	.show {
+		display:block:
+	}
+	.tablon-alquiler {
+		background-color: #ffcccc;
+	}
+	.tablon-compraventa {
+		background-color: #ffffcc;
+	}
+	.tablon-evento {
+		background-color: #ccffcc;
+	}
+	.tablon-otros {
+		background-color: #ccffff;
+	}
+  </style>
 </head>
 
 <body id="page-top">
@@ -113,7 +133,9 @@
 		<!----Cabecera----->
 		<!----------------->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#NuevoAnuncioModal"><i class="fas fa-fw fa-plus-square "></i> Nuevo anuncio</button>
+		
+
+
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
@@ -139,41 +161,105 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
+			<!-- Prueba de buscador de tarjetas -->
+		<div class="row">
+			<div class="col-sm-12 mb-3">
+				<input type="text" id="FiltroAnuncios" class="form-control" onkeyup="FiltrarAnuncios()" placeholder="Buscar contenido...">
+				<button type="button" class="btn btn-info" data-toggle="modal" data-target="#NuevoAnuncioModal"><i class="fas fa-fw fa-plus-square "></i> Nuevo anuncio</button>
+				<button type="button" class="active btn btn-outline-dark" id="all">Mostrar todo</button>
+				<button type="button" class="btn btn-outline-danger" id="tablon-alquiler">Alquiler</button>
+				<button type="button" class="btn btn-outline-warning" id="tablon-compraventa">Compraventa</button>
+				<button type="button" class="btn btn-outline-success" id="tablon-evento">Evento</button>
+				<button type="button" class="btn btn-outline-info" id="tablon-otros">Otros</button>
+			</div>
+		</div>
+		  <!-- FIN prueba buscador tarjetas -->
           <!-- Content Row -->
 			<div class="row">
-			
-			
+
 			<!-- Anuncio -->
-			<div class="card-columns">
+			<div class="card-columns" id="AnunciosPublicados">
 				<!-- Card 1 -->
-				<div class="card">
+				<div class="card tablon-alquiler">
 					<div class="card-body">
-						<h4 class="card-title">Card 1</h4>
+						<h4 class="card-title">Título tarjeta</h4>
 						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
 						<p class="card-text">Text for this card.</p>
 					</div>
-					<div class="card-footer">Footer</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
 				</div>	
 				<!-- Card 1 -->
-				<div class="card">
+				<div class="card tablon-compraventa">
 					<div class="card-body">
 						<h4 class="card-title">Card 2</h4>
 						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
-						<p class="card-text">Text for this card.</p>
+						<p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus posuere odio quis tincidunt. Pellentesque tempor diam sapien, at congue nunc vestibulum at. Suspendisse potenti. Nam nec neque quis nunc semper elementum. Maecenas interdum dapibus feugiat. Mauris auctor aliquet sapien, quis feugiat velit euismod sit amet. Aliquam tempus elementum sapien a aliquet. Phasellus auctor venenatis arcu et convallis.</p>
 					</div>
-					<div class="card-footer">Footer</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
 				</div>	
 				<!-- Card 1 -->
-				<div class="card">
+				<div class="card tablon-otros">
+					<div class="card-body">
+						<h4 class="card-title">Card 3</h4>
+						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
+						<p class="card-text">tum, ex at auctor vestibulum, orci ligula congue tortor, vitae bibendum dolor magna nec mi. Aenean auctor vestibulum condimentum. Curabitur tempus interdum ipsu</p>
+					</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
+				</div>
+				<!-- Card 1 -->
+				<div class="card tablon-otros">
+					<div class="card-body">
+						<h4 class="card-title">Card 3</h4>
+						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
+						<p class="card-text">orem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus posuere odio quis tincidunt. Pellentesque tempor diam sapien, at congue nunc vestibulum at. Suspendisse potenti. Nam nec neque quis nunc semper elementum. Maecenas interdum dapibus feugiat. Mauris auc</p>
+					</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
+				</div>	
+				<!-- Card 1 -->
+				<div class="card tablon-evento">
 					<div class="card-body">
 						<h4 class="card-title">Card 3</h4>
 						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
 						<p class="card-text">Text for this card.</p>
 					</div>
-					<div class="card-footer">Footer</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
 				</div>	
-				
+				<!-- Card 1 -->
+				<div class="card tablon-otros">
+					<div class="card-body">
+						<h4 class="card-title">Card 3</h4>
+						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
+						<p class="card-text">Text for this card.</p>
+					</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
+				</div>	
+				<!-- Card 1 -->
+				<div class="card tablon-otros">
+					<div class="card-body">
+						<h4 class="card-title">Card 3</h4>
+						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
+						<p class="card-text">orem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus posuere odio quis tincidunt. Pellentesque tempor diam sapien, at congue nunc vestibulum at. Suspendisse potenti. Nam nec neque quis nunc semper elementum. Maecenas interdum dapibus feugiat. Mauris auc</p>
+					</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
+				</div>	
+				<!-- Card 1 -->
+				<div class="card tablon-evento">
+					<div class="card-body">
+						<h4 class="card-title">Card 3</h4>
+						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
+						<p class="card-text">Text for this card.</p>
+					</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
+				</div>	
+				<!-- Card 1 -->
+				<div class="card tablon-otros">
+					<div class="card-body">
+						<h4 class="card-title">Card 3</h4>
+						<h6 class="card-subtitle mb-2 text-muted">Categoría</h6>
+						<p class="card-text">Text for this card.</p>
+					</div>
+					<div class="card-footer">12/03/2020 - Publicado por <strong>Usuario</strong></div>
+				</div>	
 			</div>
 
 			
@@ -262,7 +348,37 @@
 
   <!-- JavaScript propio -->
   <script src="js/tablas-apuntomatic.js"></script>
-
+  <!-- Filtro de tarjetas en el tablón de anuncios -->
+  <script>
+	function FiltrarAnuncios() {
+		var input, filter, cards, cardContainer, h4, title, i;
+		input = document.getElementById("FiltroAnuncios");
+		filter = input.value.toUpperCase();
+		cardContainer = document.getElementById("AnunciosPublicados");
+		cards = cardContainer.getElementsByClassName("card");
+		for (i = 0; i < cards.length; i++) {
+			title = cards[i].querySelector(".card-body");
+			if (title.innerText.toUpperCase().indexOf(filter) > -1) {
+				cards[i].style.display = "";
+			} else {
+				cards[i].style.display = "none";
+			}
+		}
+	}
+  </script>
+  <!-- FIN Filtro de tarjetas en el tablón de anuncios -->
+  <script>
+	var $btns = $('.btn').click(function() {
+	  if (this.id == 'all') {
+		$('#AnunciosPublicados > div').fadeIn(450);
+	  } else {
+		var $el = $('.' + this.id).fadeIn(450);
+		$('#AnunciosPublicados > div').not($el).hide();
+	  }
+	  $btns.removeClass('active');
+	  $(this).addClass('active');
+	})
+  </script>
 </body>
 
 </html>
