@@ -28,6 +28,11 @@
           <span>Subir apuntes</span></a>
 		</li>
 		<li class="nav-item">
+        <a class="nav-link" href="tablon.html">
+          <i class="fas fa-fw fa-sign "></i>
+          <span>Tablón de anuncios</span></a>
+		</li>
+		<li class="nav-item">
         <a class="nav-link" href="ranking.html">
           <i class="fas fa-fw fa-trophy"></i>
           <span>Ranking</span></a>
