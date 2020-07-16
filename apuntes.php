@@ -39,14 +39,14 @@ if (isset($_POST['asignaturas'])) {
 				
 				?>
 				<tr>
-					<td><center><i class="fa fa-file-<?php echo $seleccionada->tipo; ?>-o fa-2x"></i> (<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</center></td>
+					<td><center><i class="fas fa-file-<?php echo $seleccionada->tipo; ?>"></i><br>(<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</center></td>
 					<td><center><?php echo urldecode($seleccionada->nombre);?></center></td>
 					<td><center><?php echo urldecode($seleccionada->descripcion);?></center></td>
 					<td>Fecha</td>
 					<td><center><?php echo $uploader;?></center></td>
 					<td><center><?php echo $seleccionada->descargas;?></center></td>
-					<td><center><a href="<?php echo $seleccionada->file?>" onclick="window.open(\'descargar.php?id=<?php echo $seleccionada->id;?>\')" target="_blank"><i class="fa fa-cloud-download fa-2x"></i></a></center></td>
-					<td><button title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fa fa-exclamation-circle text-danger"></i></button></td>
+					<td><center><a href="<?php echo $seleccionada->file?>" onclick="window.open(\'descargar.php?id=<?php echo $seleccionada->id;?>\')" target="_blank"><i class="fas fa-cloud-download-alt fa-2x"></i></a>
+					<a href="#" title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fas fa-exclamation-circle fa-2x text-danger"></i></a></center></td>
 				</tr>
 
 				<!-- ******************* -->
@@ -75,62 +75,6 @@ if (isset($_POST['asignaturas'])) {
 						</div>
 					</div>
 				</div>
-				<!-- ******************* -->
-				<!-- Tabla extensible de ediciones de documento -->
-				<tbody id="edits<?php echo $div_id;?>" class="collapse hiddenrow accordion-toggle">
-						<?php
-						while ($sel_ed = mysqli_fetch_object($edits)) {
-							$petnomuser_ed = mysqli_query($_SESSION['con'], "SELECT user_nick FROM `ap_users` WHERE `ID` = ". $sel_ed->usuario_id . "");
-							$consnomuser_ed = mysqli_fetch_object($petnomuser_ed);
-							if(isset($sel_ed->anonimo) && $sel_ed->anonimo == '1')
-							{
-							$uploader_ed = "Anónimo";
-							}  
-							else {
-							$uploader_ed = $consnomuser_ed->user_nick;
-							}?>
-								<tr class="success">
-									<td><center><i class="fa fa-file-<?php echo $sel_ed->tipo; ?>-o fa-2x"></i></center></td>
-									<td><center><?php echo urldecode($sel_ed->nombre);?></center></td>
-									<td><center><?php echo urldecode($sel_ed->descripcion);?></center></td>
-									<td><center><?php echo number_format($sel_ed->size/1024,2,".",",");?> Mb</center></td>
-									<td><center><a href="<?php echo $sel_ed->file ?>" onclick="window.open(\'descargar.php?id=<?php echo $sel_ed->id;?>\')" target="_blank"><i class="fa fa-chevron-circle-down fa-2x"></i></a></center></td>
-									<td><center><?php echo $uploader_ed;?></center></td>
-									<td></td>
-									<td><center><?php echo $sel_ed->descargas;?></center></td>
-									<td><button title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fa fa-exclamation-circle text-danger"></i></button></td>
-								</tr>	
-									<!-- ******************* -->
-									<!-- Modal denunciar ediciones -->
-									<div class="modal fade" id="modal_denuncia<?php echo $sel_ed->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-													<h4 class="modal-title" id="titulo-modal">Denunciar documento </h4> <?php echo urldecode($sel_ed->nombre);?>
-												</div>
-												<div class="modal-body">
-													<form name="enviardenuncia" id="form-denuncia" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post">
-													<div class="form-group">
-														<label>Motivos</label>
-														<textarea class="form-control" rows="3" id="DENmotivo" name="DENmotivo" placeholder="Describe brevemente los motivos de denuncia"></textarea>
-													</div>
-													<input type="hidden" id="DENarchivo" name="DENarchivo" value="<?php echo $sel_ed->id;?>">
-													<input type="hidden" id="DENdenunciante" name="DENdenunciante" value="<?php echo $_SESSION['id']; ?>">
-													<input type="hidden" id="DENacusado" name="DENacusado" value="<?php echo $consnomuser_ed->user_nick; ?>"> 
-												</div>
-												<div class="modal-footer">
-													<input class="btn btn-danger" name="DENboton" type="submit" value="Enviar denuncia" id="DENboton">
-													<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
-												</div></form>
-											</div>
-										</div>
-									</div>
-									<!-- ******************* -->								
-							<?php
-						}
-						?>
-				</tbody>
 				<?php			
 			}
 		}
@@ -201,40 +145,39 @@ if (isset($_POST['asignaturas'])) {
                 <!-- Card Body -->
                 <div class="card-body">
                   <!-- Selector asignaturas -->
-                    <form class="form-inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post" name="form">
-					<div class="form-group col-md-4">
-					  <label class="sr-only" for="carreras">Titulación</label>
-                        <select class="custom-select col-sm-12" name="carreras" id="carreras" onChange="cargaContenido(this.id)" >
-                          <option value='0' >Selecciona Titulación</option>
-                          <?php generaCarreras(); ?>
-                        </select>
-					</div>
-					<div class="form-group col-md-4">
+                    <form class="form-inline" id="SelAsig" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post" name="form">
+											<div class="form-group col-md-4">
+					  						<label class="sr-only" for="carreras">Titulación</label>
+													<select class="custom-select col-sm-12" name="carreras" id="carreras" onChange="cargaContenido(this.id)" >
+														<option value='0' >Selecciona Titulación</option>
+														<?php generaCarreras(); ?>
+													</select>
+											</div>
+										<div class="form-group col-md-4">
                       <label class="sr-only" for="cursos">Curso</label>
                         <select class="custom-select col-sm-12" name="cursos" id="cursos" disabled>
                           <option value="0">Selecciona Curso</option>
                         </select>
-					</div>
-					<div class="form-group col-md-4">
+										</div>
+										<div class="form-group col-md-4">
                       <label class="sr-only" for="asignaturas">Asignatura</label>
                         <select class="custom-select col-sm-12" name="asignaturas" id="asignaturas" disabled>
                           <option value="0">Selecciona Asignatura</option>
                         </select>
-					</div>
-					<div class="form-group col-md-4">
-					<button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
-					</div>
+										</div>
                     </form>
                   <!-- Selector asignaturas FIN -->
                 </div>
               </div>
             </div>
           </div>
-
           <!-- Content Row -->
-
           <div class="row">
-
+						<?php
+									if (!isset($_POST['asignaturas'])) {
+									}
+									else {
+										?>
             <!-- Area Chart -->
             <div class="col-lg-12">
               <div class="card shadow mb-4">
@@ -243,10 +186,9 @@ if (isset($_POST['asignaturas'])) {
                   <h6 class="m-0 font-weight-bold text-primary"><?php mostrar_asignatura(); ?></h6>
                 </div>
                 <!-- Card Body -->
+								
                 <div class="card-body">
-								<?php
-									if (isset($_POST['asignaturas'])) {
-										?>
+								
 										
                   <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -258,7 +200,6 @@ if (isset($_POST['asignaturas'])) {
                       <th>Fecha</th>
 											<th>Usuario</th>
                       <th>Descargas</th>
-                      <th>Enlace</th>
 											<th>Opciones</th>
                     </tr>
                   </thead>
@@ -270,7 +211,6 @@ if (isset($_POST['asignaturas'])) {
                       <th>Fecha</th>
 											<th>Usuario</th>
                       <th>Descargas</th>
-                      <th>Enlace</th>
 											<th>Opciones</th>
                     </tr>
                   </tfoot>
@@ -280,10 +220,6 @@ if (isset($_POST['asignaturas'])) {
                 </table>
               </div>
 							<?php
-									}else {
-										?>
-											No hay documentos disponibles. <a href="subir.html">¿Quieres subir uno?</a>
-										<?php
 									}
 								?>
                 </div>
@@ -331,7 +267,6 @@ if (isset($_POST['asignaturas'])) {
 
   <!-- JavaScript propio -->
   <script src="js/tablas-apuntomatic.js"></script>
-
 </body>
 
 </html>
