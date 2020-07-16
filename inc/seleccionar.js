@@ -89,4 +89,5 @@ function cargaContenido(idSelectOrigen)
 		}
 		ajax.send(null);
 	}
+	else { this.form.submit(); }
 }
