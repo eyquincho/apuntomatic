@@ -39,14 +39,16 @@ if (isset($_POST['asignaturas'])) {
 				
 				?>
 				<tr>
-				<td><center><i class="fa fa-file-<?php echo $seleccionada->tipo; ?>-o fa-2x"></i></center></td>
-				<td><center><?php echo urldecode($seleccionada->nombre);?></center></td>
-				<td><center><?php echo urldecode($seleccionada->descripcion);?></center></td>
-				<td><center><?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb</center></td>
-				<td><center><a href="<?php echo $seleccionada->file?>" onclick="window.open(\'descargar.php?id=<?php echo $seleccionada->id;?>\')" target="_blank"><i class="fa fa-cloud-download fa-2x"></i></a></center></td>
-				<td><center><?php echo $uploader;?></center></td>
-				<td><center><?php echo $seleccionada->descargas;?></center></td>
-				<td><button title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fa fa-exclamation-circle text-danger"></i></button></td>
+					<td><center><i class="fa fa-file-<?php echo $seleccionada->tipo; ?>-o fa-2x"></i> (<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</center></td>
+					<td><center><?php echo urldecode($seleccionada->nombre);?></center></td>
+					<td><center><?php echo urldecode($seleccionada->descripcion);?></center></td>
+					<td>Fecha</td>
+					<td><center><?php echo $uploader;?></center></td>
+					<td><center><?php echo $seleccionada->descargas;?></center></td>
+					<td><center><a href="<?php echo $seleccionada->file?>" onclick="window.open(\'descargar.php?id=<?php echo $seleccionada->id;?>\')" target="_blank"><i class="fa fa-cloud-download fa-2x"></i></a></center></td>
+					<td><button title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fa fa-exclamation-circle text-danger"></i></button></td>
+				</tr>
+
 				<!-- ******************* -->
 				<!-- Modal denunciar documento -->
 				<div class="modal fade" id="modal_denuncia<?php echo $div_id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
@@ -242,6 +244,10 @@ if (isset($_POST['asignaturas'])) {
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
+								<?php
+									if (isset($_POST['asignaturas'])) {
+										?>
+										
                   <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
@@ -250,98 +256,42 @@ if (isset($_POST['asignaturas'])) {
                       <th>Nombre</th>
                       <th>Descripción</th>
                       <th>Fecha</th>
+											<th>Usuario</th>
                       <th>Descargas</th>
                       <th>Enlace</th>
+											<th>Opciones</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-					  <th>Formato</th>
+											<th>Formato</th>
                       <th>Nombre</th>
                       <th>Descripción</th>
                       <th>Fecha</th>
+											<th>Usuario</th>
                       <th>Descargas</th>
                       <th>Enlace</th>
+											<th>Opciones</th>
                     </tr>
                   </tfoot>
                   <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Garrett Winters</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>63</td>
-                      <td>2011/07/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Ashton Cox</td>
-                      <td>Junior Technical Author</td>
-                      <td>San Francisco</td>
-                      <td>66</td>
-                      <td>2009/01/12</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Cedric Kelly</td>
-                      <td>Senior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>22</td>
-                      <td>2012/03/29</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Airi Satou</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>33</td>
-                      <td>2008/11/28</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Brielle Williamson</td>
-                      <td>Integration Specialist</td>
-                      <td>New York</td>
-                      <td>61</td>
-                      <td>2012/12/02</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Herrod Chandler</td>
-                      <td>Sales Assistant</td>
-                      <td>San Francisco</td>
-                      <td>59</td>
-                      <td>2012/08/06</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
+                    <?php mostrar_lista(); ?>
                   </tbody>
                 </table>
               </div>
+							<?php
+									}else {
+										?>
+											No hay documentos disponibles. <a href="subir.html">¿Quieres subir uno?</a>
+										<?php
+									}
+								?>
                 </div>
-              </div>
+              
+							</div>
             </div>
 
           
-          </div>
-		  <div class="row">
-            <div class="col-lg-12">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Documentos disponibles de ###</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-				  No hay documentos disponibles. <a href="subir.html">¿Quieres subir uno?</a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <!-- /.container-fluid -->
