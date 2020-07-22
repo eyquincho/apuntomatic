@@ -3,7 +3,7 @@
 	if(!isset($_SESSION['nick'])){
 		header("Location: index.php");
 		die();
-	} else {
+	} else {}
 include_once("inc/conDB.php");
 conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
@@ -13,8 +13,12 @@ function mostrar_lista() {
 	while ($seleccionada = mysqli_fetch_object($docs_tabla)) {
 		$petnomuser = mysqli_query($_SESSION['con'], "SELECT user_nick FROM `ap_users` WHERE `ID` = ". $seleccionada->usuario_id . "");
 		$consnomuser = mysqli_fetch_object($petnomuser);
-		$sql_asignatura = mysqli_query($_SESSION['con'], "SELECT opcion FROM `ap_asignaturas` WHERE `ID` = ". $seleccionada->asignatura_id . "");
+		$sql_asignatura = mysqli_query($_SESSION['con'], "SELECT opcion, relacion FROM `ap_asignaturas` WHERE `ID` = ". $seleccionada->asignatura_id . "");
 		$pet_asignatura = mysqli_fetch_object($sql_asignatura);
+		$sql_curso = mysqli_query($_SESSION['con'], "SELECT opcion, relacion FROM `ap_cursos` WHERE `id` = ". $pet_asignatura->relacion . "");
+		$pet_curso = mysqli_fetch_object($sql_curso);
+		$sql_titulacion = mysqli_query($_SESSION['con'], "SELECT opcion FROM `ap_carreras` WHERE `id` = ". $pet_curso->relacion . "");
+		$pet_titulacion = mysqli_fetch_object($sql_titulacion);
 		if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1')
       {
       $uploader = "Anónimo";
@@ -25,7 +29,7 @@ function mostrar_lista() {
     echo '<tr>';
     echo '<td><center>' . urldecode($seleccionada->nombre) . '</center></td>';
     echo '<td><center>' . $pet_asignatura->opcion . '</center></td>';
-		echo '<td><center>Titulación</center></td>';
+		echo '<td><center>' . $pet_titulacion->opcion . '</center></td>';
 		echo '<td><center>' . $uploader . '</center></td>';
 		echo '<td><center><a href="'. $seleccionada->file .'" onclick="window.open(\'descargar.php?id='. $seleccionada->id .'\')" target="_blank"><i class="fa fa-chevron-circle-down fa-2x"></i></a></center></td>';
 		echo '</tr>';  
@@ -258,4 +262,3 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
 
 </body>
 </html>
-<?php } ?>   
