@@ -7,6 +7,69 @@
 require_once("inc/conDB.php");
 conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
+<?php
+		function generaCarreras()
+		{
+			$consulta = mysqli_query($_SESSION['con'], "SELECT `id`, `opcion` FROM `ap_carreras`");
+			// Voy imprimiendo el primer select compuesto por los carreras
+			while($registro=mysqli_fetch_row($consulta))
+			{
+				echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
+			}
+		}
+		function tramitarsubida () {
+		if(isset($_FILES['archivo'])){
+		
+ 		$uploaddir = "documentos/";
+ 		// 
+		$file = time() . '-' . $_FILES['archivo']['name'];
+		$file = preg_replace('/[^0-9a-zA-Z-_.]+/','',$file);
+ 		$uploadfile = $uploaddir . $file;
+ 		$error = $_FILES['archivo']['error'];
+ 		$subido = false;
+ 		$tipoch = str_replace("application/","",$_FILES["archivo"]["type"]);
+		switch ($tipoch) {
+		    case "vnd.openxmlformats-officedocument.wordprocessingml.document":
+		        $tipo = "docx";
+		        break;
+		    case "vnd.ms-excel":
+		        $tipo = "xls";
+		        break;
+		    case "vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+		        $tipo = "xlsx";
+		        break;
+		    case "vnd.ms-powerpoint":
+		        $tipo = "ppt";
+		        break;
+		    case "ax-rar-compressed":
+		        $tipo = "rar";
+		        break;
+		}
+		$n = $_SESSION["nick"];
+		$query = "SELECT `ID` FROM `ap_users` WHERE `user_nick`='$n'";
+		$query2 = mysqli_query($_SESSION['con'], $query);
+		$fila = mysqli_fetch_array($query2);
+		$user_id = $fila["ID"];
+		$titulo = urlencode($_POST['titulo']);
+		$asignatura = $_POST['asignaturas'];
+		$descripcion = urlencode($_POST['descripcion']);
+		$size = $_FILES["archivo"]["size"] / 1024;
+		if(isset($_POST['anon'])){
+		$anonimo = true;}
+		else {
+		$anonimo = false;}
+		if(isset($_POST['boton']) && $error==UPLOAD_ERR_OK) { 
+		   $subido = copy($_FILES['archivo']['tmp_name'], $uploadfile); 
+		   $check = $subido && !empty($titulo) && !empty($asignatura);
+		   $qry = "INSERT INTO ap_documentos ( usuario_id, asignatura_id, creado_ts, file, size, nombre, descripcion, tipo, anonimo ) VALUES
+			('$user_id','$asignatura', CURDATE(), '$uploadfile','$size','$titulo','$descripcion', '$tipo', '$anonimo')";
+			mysqli_query($_SESSION['con'], $qry);
+			$update_user = "UPDATE ap_users SET user_files=(user_files + 1) WHERE id='$user_id'";
+			mysqli_query($_SESSION['con'], $update_user);
+			echo "<div class=\"alert alert-success\" role=\"alert\">Archivo subido correctamente</div>";  }
+		else {echo "<div class=\"alert alert-success\" role=\"alert\">Ha ocurrido un error al subir el archivo</div>";}
+		}}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -48,7 +111,8 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-		<form class="form">
+				<?php tramitarsubida(); ?>
+		<form class="form" id="form1" action="subir.php" enctype="multipart/form-data" method="post" name="form">
           <!-- Content Row -->
           <div class="row">
             <div class="col-lg-4">
@@ -58,36 +122,25 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-				 
-					<label class="sr-only" for="Select1">Universidad</label>
-					<select class="custom-select col-lg-12" id="Select1">
-						<option selected>Universidad</option>
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
-					</select>
-					<label class="sr-only" for="Select2">Carrera</label>
-					<select class="custom-select col-lg-12" id="Select2">
-						<option selected>Titulación</option>
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
-					</select>
-					<label class="sr-only" for="Select3">Curso</label>
-					<select class="custom-select col-lg-12" id="Select3">
-						<option selected>Curso</option>
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
-					</select>
-					<label class="sr-only" for="Select4">Asignatura</label>
-					<select class="custom-select col-lg-12" id="Select4">
-						<option selected>Asignatura</option>
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
-					</select>
-				  
+					<div class="form-group" >
+						<label class="sr-only" for="carreras">Elige titulación</label>
+						<select class="custom-select col-lg-12" name="carreras" id="carreras" onChange="cargaContenido(this.id)">
+							<option value='0'>Selecciona Titulación</option>
+							<?php generaCarreras(); ?>
+						</select>
+					</div>
+					<div class="form-group" >
+						<label class="sr-only" for="cursos">Curso</label>
+						<select class="custom-select col-lg-12" name="cursos" id="cursos" disabled>
+							<option value='0'>Selecciona Curso</option>
+						</select>
+					</div>
+					<div class="form-group" >
+						<label class="sr-only" for="asignaturas">Asignatura</label>
+						<select class="custom-select col-lg-12" id="asignaturas" class="form-control" disabled>
+							<option value='0'>Selecciona Asignatura</option>
+						</select>
+				  </div>
                 </div>
               </div>
             </div>
@@ -109,29 +162,14 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
 					<textarea class="form-control" rows="3" id="descripcion" name="descripcion"></textarea>
 					</div>
 					<div class="custom-file">
-					  <input type="file" class="custom-file-input" id="customFile" required>
+					  <input type="file" class="custom-file-input" id="archivo" name="archivo" required>
 					  <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
 					</div>
 					<div class="form-group custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="customCheck1">
-						<label class="custom-control-label" for="customCheck1">Subir de forma anónima</label>
+						<input type="checkbox" class="custom-control-input" name="anon" id="anon" value="1" >
+						<label class="custom-control-label" for="anon">Subir de forma anónima</label>
 					</div>
-					<button type="submit" class="btn btn-primary">Enviar</button>
-                </div>
-              </div>
-            </div>
-
-          
-          </div>
-		  <div class="row">
-            <div class="col-lg-12">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Documentos disponibles de ###</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-				  No hay documentos disponibles. <a href="subir.html">¿Quieres subir uno?</a>
+					<button type="submit" class="btn btn-primary" name="boton" id="subir_doc" value="Subir Documento" >Enviar</button>
                 </div>
               </div>
             </div>
@@ -171,7 +209,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
   <script src="js/sb-admin-2.js"></script>
   <script src="js/jquery.dataTables.min.js"></script>
   <script src="js/dataTables.bootstrap4.min.js"></script>
-
+  <script src="inc/seleccionar_subida.js"></script>
   <!-- JavaScript propio -->
   <script src="js/tablas-apuntomatic.js"></script>
 
