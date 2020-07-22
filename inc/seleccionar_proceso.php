@@ -33,8 +33,8 @@ if(validaSelect($selectDestino) && validaOpcion($opcionSeleccionada))
 	$consulta=mysqli_query($_SESSION['con'], "SELECT id, opcion FROM $tabla WHERE relacion='$opcionSeleccionada'") or die(mysqli_error());
 	
 	// Comienzo a imprimir el select
-	echo "<select class='custom-select col-lg-12' name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido(this.id)' class=\"custom-select col-lg-4\">";
-	echo "<option value='0'>Selecciona...</option>";
+	echo "<select class='custom-select col-lg-12' name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido(this.id)' required>";
+	echo "<option value=\"\">Selecciona...</option>";
 	while($registro=mysqli_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
