@@ -23,7 +23,7 @@
           <span>Buscar apuntes</span></a>
 		</li>
 		<li class="nav-item">
-        <a class="nav-link" href="subir.html">
+        <a class="nav-link" href="subir.php">
           <i class="fas fa-fw fa-file-upload "></i>
           <span>Subir apuntes</span></a>
 		</li>
