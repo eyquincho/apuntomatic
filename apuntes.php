@@ -3,7 +3,7 @@
 	if(!isset($_SESSION['nick'])){
 		header("Location: index.php");
 		die();
-	} else {
+	} else {}
 require_once("inc/conDB.php");
 conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
@@ -270,4 +270,3 @@ if (isset($_POST['asignaturas'])) {
 </body>
 
 </html>
-<?php } ?>   
