@@ -8,11 +8,10 @@
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
-            <div class="topbar-divider d-none d-sm-block"></div>
-
-            <!-- Nav Item - User Information -->
+						<div class="topbar-divider d-none d-sm-block"></div>
+						<!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
+								<span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
                 <img class="img-profile rounded-circle" src="https://www.gravatar.com/avatar/<?php echo $_SESSION["emailhash"]; ?>?s=50">
             </li>
 

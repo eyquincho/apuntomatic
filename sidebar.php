@@ -28,7 +28,7 @@
           <span>Subir apuntes</span></a>
 		</li>
 		<li class="nav-item">
-        <a class="nav-link" href="tablon.html">
+        <a class="nav-link" href="tablon.php">
           <i class="fas fa-fw fa-sign "></i>
           <span>Tablón de anuncios</span></a>
 		</li>
@@ -72,7 +72,7 @@
         <a class="nav-link" href="inc/cerrar.php">
           <i class="fas fa-fw fa-sign-out-alt "></i>
           <span>Cerrar sesión</span></a>
-      </li>
+    </li>
       <hr class="sidebar-divider d-none d-md-block">
       <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
