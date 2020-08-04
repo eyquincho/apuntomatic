@@ -1,3 +1,17 @@
+<?php @session_start();
+	// Control de sesión inciada
+	if(!isset($_SESSION['nick'])){
+		header("Location: index.php");
+		die();
+	} else {}
+include_once("inc/conDB.php");
+conexionDB();
+mysqli_set_charset($_SESSION['con'], 'utf8');
+  if($_SESSION["admin"]==0){
+    header("Location: main.php");
+    die();
+  } else {}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -16,11 +30,6 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link href="css/sb-admin-2.css" rel="stylesheet">
   <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet">
-  <style>
-	.sinleer {
-	 color:#000000;
-	}
-  </style>
 </head>
 
 <body id="page-top">
@@ -28,85 +37,7 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <!------------->
-	<!-- Sidebar -->
-	<!------------->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Logo -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3">Apuntomatic</div>
-      </a>
-      <hr class="sidebar-divider my-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Portada</span></a>
-      </li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Apuntomatic
-      </div>
-		<li class="nav-item">
-        <a class="nav-link" href="apuntes.html">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Buscar apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="subir.html">
-          <i class="fas fa-fw fa-file-upload "></i>
-          <span>Subir apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="ranking.html">
-          <i class="fas fa-fw fa-trophy"></i>
-          <span>Ranking</span></a>
-		</li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Config
-      </div>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Perfil</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.html">Mi perfil</a>
-            <a class="collapse-item" href="perfil-edit.html">Editar</a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="ads.html">
-          <i class="fas fa-fw fa-ad"></i>
-          <span>Publicidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="admin.html">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>Admin</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="privacidad.html">
-          <i class="fas fa-fw fa-user-shield"></i>
-          <span>Privacidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="cerrar.html">
-          <i class="fas fa-fw fa-sign-out-alt "></i>
-          <span>Cerrar sesión</span></a>
-      </li>
-      <hr class="sidebar-divider d-none d-md-block">
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!----------------->
-	<!-- Fin Sidebar -->
-	<!----------------->
+  <?php include "sidebar.php" ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -117,26 +48,7 @@
         <!----------------->
 		<!----Cabecera----->
 		<!----------------->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-          <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-            <div class="topbar-divider d-none d-sm-block"></div>
-
-            <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong>Usuario</strong></span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-            </li>
-
-          </ul>
-
-        </nav>
+    <?php include "header.php" ?>
         <!----------------->
 		<!---Fin Cabecera-->
 		<!----------------->
@@ -170,7 +82,7 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Mensajes de usuarios</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Anuncios pendientes aprobación</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">1.235</div>
                     </div>
                     <div class="col-auto">
@@ -187,11 +99,11 @@
           <div class="row">
 
             <!-- Area Chart -->
-            <div class="col-xl-8 col-lg-7">
+            <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Última actividad </h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Denuncias</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -226,54 +138,7 @@
                       <td>2011/04/25</td>
                       <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
                     </tr>
-                    <tr>
-                      <td>Garrett Winters</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>63</td>
-                      <td>2011/07/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Ashton Cox</td>
-                      <td>Junior Technical Author</td>
-                      <td>San Francisco</td>
-                      <td>66</td>
-                      <td>2009/01/12</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Cedric Kelly</td>
-                      <td>Senior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>22</td>
-                      <td>2012/03/29</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Airi Satou</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>33</td>
-                      <td>2008/11/28</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Brielle Williamson</td>
-                      <td>Integration Specialist</td>
-                      <td>New York</td>
-                      <td>61</td>
-                      <td>2012/12/02</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    <tr>
-                      <td>Herrod Chandler</td>
-                      <td>Sales Assistant</td>
-                      <td>San Francisco</td>
-                      <td>59</td>
-                      <td>2012/08/06</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
+                    
                   </tbody>
                 </table>
               </div>
@@ -281,17 +146,150 @@
               </div>
             </div>
 
-            <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
+            <!-- Area Chart -->
+            <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Publicidad</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Anuncios</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                  <a src="#" target="_blank" ><img src="https://via.placeholder.com/500" style="width:100%" /></a>
-				  ¿Quieres mostrar algo aqui? Consulta la sección <a href="publicidad.html">Publicidad</a>
+                  <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Doc</th>
+                      <th>Usuario</th>
+                      <th>Documento</th>
+                      <th>Asignatura</th>
+                      <th>Titulación</th>
+                      <th>Enlace</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Doc</th>
+                      <th>Usuario</th>
+                      <th>Documento</th>
+                      <th>Asignatura</th>
+                      <th>Titulación</th>
+                      <th>Enlace</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <tr>
+                      <td>Tiger Nixon</td>
+                      <td>System Architect</td>
+                      <td>Edinburgh</td>
+                      <td>61</td>
+                      <td>2011/04/25</td>
+                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+                </div>
+              </div>
+            </div>
+            <!-- Area Chart -->
+            <div class="col-xl-6 col-lg-6">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Nick</th>
+                      <th>Email</th>
+                      <th>Fecha registro</th>
+                      <th>Enlace</th>
+                      <th>Subidas</th>
+                      <th>Descargas</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Nick</th>
+                      <th>Email</th>
+                      <th>Fecha registro</th>
+                      <th>Enlace</th>
+                      <th>Subidas</th>
+                      <th>Descargas</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <tr>
+                      <td>Tiger Nixon</td>
+                      <td>System Architect</td>
+                      <td>Edinburgh</td>
+                      <td>61</td>
+                      <td>2011/04/25</td>
+                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+                </div>
+              </div>
+            </div>
+            <!-- Area Chart -->
+            <div class="col-xl-6 col-lg-6">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Documentos</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Asignatura</th>
+                      <th>Fecha</th>
+                      <th>Nombre</th>
+                      <th>Descargas</th>
+                      <th>Anonimo</th>
+                      <th>Tipo</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>Asignatura</th>
+                      <th>Fecha</th>
+                      <th>Nombre</th>
+                      <th>Descargas</th>
+                      <th>Anonimo</th>
+                      <th>Tipo</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <tr>
+                      <td>Tiger Nixon</td>
+                      <td>System Architect</td>
+                      <td>Edinburgh</td>
+                      <td>61</td>
+                      <td>2011/04/25</td>
+                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
                 </div>
               </div>
             </div>
