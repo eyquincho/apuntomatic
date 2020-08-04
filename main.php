@@ -179,7 +179,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTableHome" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Documento</th>
