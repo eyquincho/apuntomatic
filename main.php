@@ -9,7 +9,7 @@ conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
 
 function mostrar_lista() {
-	$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND NOT (`asignatura_id`= 4 OR `asignatura_id`= 38) ORDER BY `id` DESC LIMIT 20");
+	$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND NOT (`asignatura_id`= 4 OR `asignatura_id`= 38) ORDER BY `id` DESC LIMIT 10");
 	while ($seleccionada = mysqli_fetch_object($docs_tabla)) {
 		$petnomuser = mysqli_query($_SESSION['con'], "SELECT user_nick FROM `ap_users` WHERE `ID` = ". $seleccionada->usuario_id . "");
 		$consnomuser = mysqli_fetch_object($petnomuser);
@@ -70,27 +70,11 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
 </head>
 
 <body id="page-top">
-
-  <!-- Page Wrapper -->
   <div id="wrapper">
-
   <?php include "sidebar.php" ?>
-
-    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
-      <!-- Main Content -->
       <div id="content">
-
-        <!----------------->
-		<!----Cabecera----->
-		<!----------------->
           <?php include "header.php" ?>
-        <!----------------->
-		<!---Fin Cabecera-->
-		<!----------------->
-
-        <!-- Begin Page Content -->
         <div class="container-fluid">
 
           <!-- Content Row -->
