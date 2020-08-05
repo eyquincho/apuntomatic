@@ -1,3 +1,30 @@
+<?php @session_start();
+	// Control de sesión inciada
+	if(!isset($_SESSION['nick'])){
+		header("Location: index.php");
+		die();
+	} else {}
+include_once("inc/conDB.php");
+conexionDB();
+mysqli_set_charset($_SESSION['con'], 'utf8');
+
+	function nuevoAnuncio() {
+		if (isset($_POST['nuevo_anuncio_enviar'])){
+			$url_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_url']);
+			$imagen_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_imagen']);
+			$descripcion_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_descripcion']);
+			$fecha_inicio = $_POST['nuevo_anuncio_inicio'];
+			$fecha_final = $_POST['nuevo_anuncio_final'];
+			$usuario_anuncio = $_SESSION["nick"];
+			$usuario_id_anuncio = $_SESSION["id"];
+			$qry = "INSERT INTO ap_publicidad ( titulo, categoria, contenido, fecha_inicio, fecha_final, usuario, usuario_id ) VALUES
+			('$titulo_tarjeta','$categoria_tarjeta', '$contenido_tarjeta','$fecha_inicio','$fecha_final','$usuario_tarjeta', '$usuario_id_tarjeta')";
+			mysqli_query($_SESSION['con'], $qry);
+			echo "<div class=\"alert alert-success\" role=\"alert\">El anuncio se ha enviado para aprobación</div>";
+		}
+	}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -22,122 +49,10 @@
 
   <!-- Page Wrapper -->
   <div id="wrapper">
-
- <!------------->
-	<!-- Sidebar -->
-	<!------------->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Logo -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3">Apuntomatic</div>
-      </a>
-      <hr class="sidebar-divider my-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Portada</span></a>
-      </li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Apuntomatic
-      </div>
-		<li class="nav-item">
-        <a class="nav-link" href="apuntes.html">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Buscar apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="subir.html">
-          <i class="fas fa-fw fa-file-upload "></i>
-          <span>Subir apuntes</span></a>
-		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="ranking.html">
-          <i class="fas fa-fw fa-trophy"></i>
-          <span>Ranking</span></a>
-		</li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        Config
-      </div>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Perfil</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.html">Mi perfil</a>
-            <a class="collapse-item" href="perfil-edit.html">Editar</a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="ads.html">
-          <i class="fas fa-fw fa-ad"></i>
-          <span>Publicidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="admin.html">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>Admin</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="privacidad.html">
-          <i class="fas fa-fw fa-user-shield"></i>
-          <span>Privacidad</span></a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="cerrar.html">
-          <i class="fas fa-fw fa-sign-out-alt "></i>
-          <span>Cerrar sesión</span></a>
-      </li>
-      <hr class="sidebar-divider d-none d-md-block">
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!----------------->
-	<!-- Fin Sidebar -->
-	<!----------------->
-
-    <!-- Content Wrapper -->
+  <?php include "sidebar.php" ?>
     <div id="content-wrapper" class="d-flex flex-column">
-
-      <!-- Main Content -->
       <div id="content">
-
-        <!----------------->
-		<!----Cabecera----->
-		<!----------------->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-            <div class="topbar-divider d-none d-sm-block"></div>
-
-            <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong>Usuario</strong></span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-            </li>
-
-          </ul>
-
-        </nav>
-        <!----------------->
-		<!---Fin Cabecera-->
-		<!----------------->
-
-        <!-- Begin Page Content -->
+          <?php include "header.php" ?>
         <div class="container-fluid">
 
 
@@ -174,32 +89,35 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-					<form>
+					<form class="form" id="nuevo-anuncio" action="publicidad.php" enctype="multipart/form-data" method="post" name="nuevo-anuncio">
 						<div class="form-group">
 							<label for="Imagen">Imagen (Las dimensiones óptimas son 500x500 px)</label>
-							<input type="file" class="form-control-file" id="Imagen">
+							<input type="file" class="form-control-file" id="nuevo_anuncio_imagen" required>
 						</div>
 						<div class="form-group">
 							<label for="url">URL</label>
-							<input type="text" class="form-control" id="url" placeholder="Dirección a la que apuntará la imagen (puede estar vacío)">
+							<input type="text" class="form-control" id="nuevo_anuncio_url" placeholder="Dirección a la que apuntará la imagen (puede estar vacío)">
 						</div>
 						
 						<div class="form-group">
 							<label for="Descripcion">Descripción</label>
-							<textarea class="form-control" id="Descripcion" placeholder="Explícanos brevemente qué nos envías. No se mostrará con el anuncio." rows="3"></textarea>
+							<textarea class="form-control" id="nuevo_anuncio_descripcion" placeholder="Explícanos brevemente qué nos envías. No se mostrará con el anuncio." rows="3" required></textarea>
 						</div>
-						
+						<div class="form-group">
+							<label for="nuevo_anuncio_inicio">Fecha inicio:</label>
+							<input type="date" id="nuevo_anuncio_inicio" name="nuevo_anuncio_inicio" required>
+						</div>
+						<div class="form-group">
+							<label for="nuevo_anuncio_final">Fecha final:</label>
+							<input type="date" id="nuevo_anuncio_final" name="nuevo_anuncio_final" required>
+						</div>
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="Condiciones">
+							<input type="checkbox" class="form-check-input" id="Condiciones" required>
 							<label class="form-check-label" for="Condiciones">Acepto que he leído y entendido las condiciones</label>
 						</div>
+						<hr>
 						<button type="submit" class="btn btn-primary">Enviar para aprobación</button>
 					</form>
-					
-					
-					
-					
-					Formulario para meter imagen // enlace // descripción
                 </div>
               </div>
             </div>
