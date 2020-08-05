@@ -33,7 +33,7 @@
           <span>Tablón de anuncios</span></a>
 		</li>
 		<li class="nav-item">
-        <a class="nav-link" href="ranking.html">
+        <a class="nav-link" href="ranking.php">
           <i class="fas fa-fw fa-trophy"></i>
           <span>Ranking</span></a>
 		</li>
@@ -48,23 +48,23 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.html">Mi perfil</a>
-            <a class="collapse-item" href="perfil-edit.html">Editar</a>
+            <a class="collapse-item" href="perfil.php">Mi perfil</a>
+            <a class="collapse-item" href="editar-perfil.php">Editar</a>
           </div>
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="ads.html">
+        <a class="nav-link" href="publicidad.php">
           <i class="fas fa-fw fa-ad"></i>
           <span>Publicidad</span></a>
       </li>
 	  <li class="nav-item">
-        <a class="nav-link" href="admin.html">
+        <a class="nav-link" href="admin.php">
           <i class="fas fa-fw fa-tools"></i>
           <span>Admin</span></a>
       </li>
 	  <li class="nav-item">
-        <a class="nav-link" href="privacidad.html">
+        <a class="nav-link" href="privacidad.php">
           <i class="fas fa-fw fa-user-shield"></i>
           <span>Privacidad</span></a>
       </li>
