@@ -2,6 +2,9 @@
 $(document).ready(function() {
   $('#dataTableHome').DataTable( {
     "bSort": false,
+		searching: false,
+		paging: false,
+		info: false,
 	"language": {
     "sProcessing":     "Procesando...",
     "sLengthMenu":     "Mostrar _MENU_ documentos",
