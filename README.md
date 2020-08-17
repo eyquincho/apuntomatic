@@ -9,4 +9,4 @@ Aun está lejos de ser una versión definitiva, mientras tanto puedes consultar 
 - [Bootstrap](https://getbootstrap.com/)
 - [dataTables](https://datatables.net/)
 - [Font Awesome](https://fontawesome.com/)
-- [Class.upload] (https://github.com/verot/class.upload.php)
+- [ClassUpload] (https://github.com/verot/class.upload.php)
