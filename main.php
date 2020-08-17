@@ -36,6 +36,12 @@ function mostrar_lista() {
   }
 }
 
+// Publicidad
+$sql_anuncio = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE `aprobado`= 1 ORDER BY RAND() LIMIT 1");
+$pet_anuncio = mysqli_fetch_object($sql_anuncio);
+$mostrar_anuncio_url = $pet_anuncio->url;
+$mostrar_anuncio_img = $pet_anuncio->imagen;
+
 // Datos para la cabecera de la página principal
 // Archivos subidos por el usuario
 $sql_head_subidas = "SELECT COUNT(id) AS subidas FROM `ap_documentos` WHERE `usuario_id`= ".$_SESSION['id']."";
@@ -200,7 +206,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                  <a src="#" target="_blank" ><img src="https://via.placeholder.com/500" style="width:100%" /></a>
+                  <a href="<?php echo $mostrar_anuncio_url; ?>" target="_blank" ><img src="<?php echo $mostrar_anuncio_img; ?>" style="width:100%" /></a>
 				  ¿Quieres mostrar algo aqui? Consulta la sección <a href="publicidad.html">Publicidad</a>
                 </div>
               </div>

@@ -7,23 +7,44 @@
 include_once("inc/conDB.php");
 conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
-
-	function nuevoAnuncio() {
-		if (isset($_POST['nuevo_anuncio_enviar'])){
+require("inc/class.upload.php");
+function GuardarAnuncio () {
+	if (isset($_POST['nuevo_anuncio_enviar'])){
+		// Tratamiento imagen
+		//Implementar class.upload.php
+			//https://github.com/verot/class.upload.php
+			$handle = new \Verot\Upload\upload($_FILES['nuevo_anuncio_imagen']);
+			if ($handle->uploaded) {
+			  $handle->file_name_body_pre		= 'anuncio_';
+			  $handle->file_safe_name 			= true;
+			  $handle->image_resize         = true;
+			  $handle->image_x              = 500;
+			  $handle->image_y              = 500;
+			  $handle->image_ratio        	= true;
+			  $handle->process('img/anuncios/');
+			  if ($handle->processed) {
+				$imagen_anuncio = $handle->file_dst_pathname;
+				$handle->clean();
+			  } else {
+				echo 'error : ' . $handle->error;
+			  }
+			}
+		// FIN tratamiento imagen
+		if (!empty($_POST['nuevo_anuncio_url'])) {
 			$url_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_url']);
-			$imagen_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_imagen']);
-			$descripcion_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_descripcion']);
-			$fecha_inicio = $_POST['nuevo_anuncio_inicio'];
-			$fecha_final = $_POST['nuevo_anuncio_final'];
-			$usuario_anuncio = $_SESSION["nick"];
-			$usuario_id_anuncio = $_SESSION["id"];
-			$qry = "INSERT INTO ap_publicidad ( titulo, categoria, contenido, fecha_inicio, fecha_final, usuario, usuario_id ) VALUES
-			('$titulo_tarjeta','$categoria_tarjeta', '$contenido_tarjeta','$fecha_inicio','$fecha_final','$usuario_tarjeta', '$usuario_id_tarjeta')";
-			mysqli_query($_SESSION['con'], $qry);
-			echo "<div class=\"alert alert-success\" role=\"alert\">El anuncio se ha enviado para aprobación</div>";
-		}
+			}else {
+				$url_anuncio = "#";
+			}
+		$descripcion_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_descripcion']);
+		$fecha_inicio = $_POST['nuevo_anuncio_inicio'];
+		$fecha_final = $_POST['nuevo_anuncio_final'];
+		$usuario_anuncio = $_SESSION["nick"];
+		$qry = "INSERT INTO ap_publicidad ( usuario, imagen, url, descripcion, inicio, fin, aprobado ) VALUES
+		('$usuario_anuncio','$imagen_anuncio', '$url_anuncio','$descripcion_anuncio','$fecha_inicio','$fecha_final', '0')";
+		mysqli_query($_SESSION['con'], $qry);
+		echo "<div class=\"alert alert-success\" role=\"alert\">El anuncio se ha enviado para aprobación</div>";
 	}
-
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -54,7 +75,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
       <div id="content">
           <?php include "header.php" ?>
         <div class="container-fluid">
-
+					<?php GuardarAnuncio(); ?>
 
           <!-- Content Row -->
 
@@ -92,16 +113,16 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
 					<form class="form" id="nuevo-anuncio" action="publicidad.php" enctype="multipart/form-data" method="post" name="nuevo-anuncio">
 						<div class="form-group">
 							<label for="Imagen">Imagen (Las dimensiones óptimas son 500x500 px)</label>
-							<input type="file" class="form-control-file" id="nuevo_anuncio_imagen" required>
+							<input type="file" class="form-control-file" name="nuevo_anuncio_imagen" required>
 						</div>
 						<div class="form-group">
 							<label for="url">URL</label>
-							<input type="text" class="form-control" id="nuevo_anuncio_url" placeholder="Dirección a la que apuntará la imagen (puede estar vacío)">
+							<input type="text" class="form-control" name="nuevo_anuncio_url" placeholder="Dirección a la que apuntará la imagen (puede estar vacío)">
 						</div>
 						
 						<div class="form-group">
 							<label for="Descripcion">Descripción</label>
-							<textarea class="form-control" id="nuevo_anuncio_descripcion" placeholder="Explícanos brevemente qué nos envías. No se mostrará con el anuncio." rows="3" required></textarea>
+							<textarea class="form-control" name="nuevo_anuncio_descripcion" placeholder="Explícanos brevemente qué nos envías. No se mostrará con el anuncio." rows="3" required></textarea>
 						</div>
 						<div class="form-group">
 							<label for="nuevo_anuncio_inicio">Fecha inicio:</label>
@@ -116,7 +137,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
 							<label class="form-check-label" for="Condiciones">Acepto que he leído y entendido las condiciones</label>
 						</div>
 						<hr>
-						<button type="submit" class="btn btn-primary">Enviar para aprobación</button>
+						<button type="submit" class="btn btn-primary" name="nuevo_anuncio_enviar">Enviar para aprobación</button>
 					</form>
                 </div>
               </div>
