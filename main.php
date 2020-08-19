@@ -207,7 +207,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
                 <!-- Card Body -->
                 <div class="card-body">
                   <a href="<?php echo $mostrar_anuncio_url; ?>" target="_blank" ><img src="<?php echo $mostrar_anuncio_img; ?>" style="width:100%" /></a>
-				  ¿Quieres mostrar algo aqui? Consulta la sección <a href="publicidad.html">Publicidad</a>
+				  ¿Quieres mostrar algo aqui? Consulta la sección <a href="publicidad.php">Publicidad</a>
                 </div>
               </div>
             </div>
@@ -219,13 +219,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Apuntomatic &copy; 2019 - GitHub</span>
-          </div>
-        </div>
-      </footer>
+      <?php include "footer.php" ?>
       <!-- End of Footer -->
 
     </div>

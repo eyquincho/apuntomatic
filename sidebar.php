@@ -48,7 +48,7 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.php">Mi perfil</a>
+            <a class="collapse-item" href="perfil.php?id=<?php echo $_SESSION['id']; ?>">Mi perfil</a>
             <a class="collapse-item" href="editar-perfil.php">Editar</a>
           </div>
         </div>

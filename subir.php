@@ -182,13 +182,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Apuntomatic &copy; 2019 - GitHub</span>
-          </div>
-        </div>
-      </footer>
+      <?php include "footer.php" ?>
       <!-- End of Footer -->
 
     </div>
