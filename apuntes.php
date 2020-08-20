@@ -9,14 +9,6 @@ conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
 require("inc/funciones_apuntes.php");
 
-if(isset($_POST['DENboton'])){
-	registrar_denuncia();
-}
-
-if(isset($_FILES['archivo'])){
-	subir_archivo();
-}
-
 if (isset($_POST['asignaturas'])) {
 
 // Recoge las filas de documentos para una asignatura concreta.
@@ -55,13 +47,15 @@ if (isset($_POST['asignaturas'])) {
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
+								<h4 class="modal-title" id="titulo-modal">Denunciar documento </h4>
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="titulo-modal">Denunciar documento </h4> <?php echo urldecode($seleccionada->nombre);?>
 							</div>
 							<div class="modal-body">
 								<form name="enviardenuncia" id="form-denuncia" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post">
+								<strong>Archivo: </strong> <?php echo urldecode($seleccionada->nombre);?><br />
+								<strong>Usuario: </strong> <?php echo $uploader;?>
+								<hr>
 								<div class="form-group">
-									<label>Motivos</label>
 									<textarea class="form-control" rows="3" id="DENmotivo" name="DENmotivo" placeholder="Describe brevemente los motivos de denuncia"></textarea>
 								</div>
 								<input type="hidden" id="DENarchivo" name="DENarchivo" value="<?php echo $div_id;?>">
@@ -134,7 +128,11 @@ if (isset($_POST['asignaturas'])) {
 
                <!-- Begin Page Content -->
         <div class="container-fluid">
-
+					<?php
+					if(isset($_POST['DENboton'])){
+						registrar_denuncia();
+					}
+					?>
           <!-- Content Row -->
           <div class="row">
             <div class="col-lg-12">
