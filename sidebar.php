@@ -32,11 +32,6 @@
           <i class="fas fa-fw fa-sign "></i>
           <span>Tablón de anuncios</span></a>
 		</li>
-		<li class="nav-item">
-        <a class="nav-link" href="ranking.php">
-          <i class="fas fa-fw fa-trophy"></i>
-          <span>Ranking</span></a>
-		</li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
         Config
@@ -49,7 +44,7 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="perfil.php?id=<?php echo $_SESSION['id']; ?>">Mi perfil</a>
-            <a class="collapse-item" href="editar-perfil.php">Editar</a>
+            <a class="collapse-item" href="perfil-edit.php">Editar</a>
           </div>
         </div>
       </li>
@@ -58,11 +53,14 @@
           <i class="fas fa-fw fa-ad"></i>
           <span>Publicidad</span></a>
       </li>
+		<?php if ($_SESSION["admin"]==1){?>
 	  <li class="nav-item">
         <a class="nav-link" href="admin.php">
           <i class="fas fa-fw fa-tools"></i>
           <span>Admin</span></a>
       </li>
+		<?php } else {}
+		?>
 	  <li class="nav-item">
         <a class="nav-link" href="privacidad.php">
           <i class="fas fa-fw fa-user-shield"></i>
