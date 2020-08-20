@@ -67,7 +67,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
 			$update_user = "UPDATE ap_users SET user_files=(user_files + 1) WHERE id='$user_id'";
 			mysqli_query($_SESSION['con'], $update_user);
 			echo "<div class=\"alert alert-success\" role=\"alert\">Archivo subido correctamente</div>";  }
-		else {echo "<div class=\"alert alert-success\" role=\"alert\">Ha ocurrido un error al subir el archivo</div>";}
+		else {echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al subir el archivo</div>";}
 		}}
 ?>
 <!DOCTYPE html>
