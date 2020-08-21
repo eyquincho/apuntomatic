@@ -37,10 +37,67 @@ function mostrar_lista() {
     echo '<td><center>' . $pet_asignatura->opcion . '</center></td>';
 		echo '<td><center>' . $pet_titulacion->opcion . '</center></td>';
 		echo '<td><center>' . date("d-m-Y", strtotime($seleccionada->creado_ts)) . '</center></td>';
-		echo '<td><center><a href="'. $seleccionada->file .'" onclick="window.open(\'descargar.php?id='. $seleccionada->id .'\')" target="_blank"><i class="fa fa-chevron-circle-down fa-2x"></i></a></center></td>';
+		echo '<td><center><a href="'. $seleccionada->file .'" onclick="window.open(\'descargar.php?id='. $seleccionada->id .'\')" target="_blank"><i class="fa fa-chevron-circle-down"></i></a>';
+		if ($_GET['id']==$_SESSION['id']){
+			echo ' <i class="fas fa-edit"></center></td>';
+		}else {
+			echo '</center></td>';
+			}
 		echo '</tr>';  
   }
 }
+
+function cambio_pass() {
+		if(isset($_POST['enviar_cambio_pass'])) {
+				if($_POST['usuario_clave'] != $_POST['usuario_clave_conf']) {
+					echo "<div class=\"alert alert-warning\" role=\"alert\">Las contraseñas insertadas no coinciden</div>";
+				}else {
+					$usuario_nombre = $_SESSION['nick'];
+					$antigua_clave = mysqli_real_escape_string($_SESSION['con'], $_POST["antigua_clave"]);
+					$antigua_clave = md5($antigua_clave); // encriptamos la nueva contraseña con md5
+					$usuario_clave = mysqli_real_escape_string($_SESSION['con'], $_POST["usuario_clave"]);
+					$usuario_clave = md5($usuario_clave); // encriptamos la nueva contraseña con md5
+					$pet_oldkey = mysqli_query($_SESSION['con'], "SELECT user_pass FROM `ap_users` WHERE `user_nick` = '". $_SESSION['nick'] . "'");
+					$oldkey = mysqli_fetch_object($pet_oldkey);
+					if ($oldkey->user_pass != $antigua_clave) {
+						echo "<div class=\"alert alert-warning\" role=\"alert\">Tu contreña actual no es correcta</div>";
+					}else { 
+						$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET user_pass='".$usuario_clave."' WHERE user_nick='".$usuario_nombre."'");
+						if($sql) {
+							echo "<div class=\"alert alert-success\" role=\"alert\">Contraseña cambiada correctamente</div>";
+						}else {
+							echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu contraseña</div>";
+						}
+						}
+				} 
+				} 
+				else {}
+}
+
+function delete_account(){
+		if(isset($_POST['enviar_borrado'])){
+		if(isset($_POST['confirmar_borrado'])) {
+			$password=$_POST['clave_borrado'];
+			$password = MD5(stripslashes($password));
+			$pet_oldkey2 = mysqli_query($_SESSION['con'], "SELECT user_pass FROM `ap_users` WHERE `user_nick` = '". $_SESSION['nick'] . "'");
+			$oldkey2 = mysqli_fetch_object($pet_oldkey2);
+			if ($oldkey2->user_pass != $password){
+				echo "<div class=\"alert alert-danger\" role=\"alert\">La contraseña no es correcta.</div>";
+			}
+			else {
+				mysqli_query($_SESSION['con'], "DELETE FROM `ap_users` WHERE `user_nick` = '".$_SESSION['nick']."'");
+				session_destroy();
+				echo "<script language=\"javascript\">
+				window.location.href=\"index.php?log_er=4\";
+				</script>";
+			}
+		} 
+			else {
+				echo "<div class=\"alert alert-danger\" role=\"alert\">No has confirmado que quieres borrar tu cuenta.</div>";
+			}
+		}else{}
+	}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -70,15 +127,15 @@ function mostrar_lista() {
           <?php include "header.php" ?>
         <div class="container-fluid">
 					<?php
+						cambio_pass();
+						delete_account();
 						if (isset($_GET['ec']) && $_GET['ec']==1){
-							echo "<div class=\"alert alert-warning\" role=\"alert\">El usuario que buscas no existe</div>";
+							echo "<div class=\"alert alert-warning\" role=\"alert\">El usuario que buscas no existe o es privado</div>";
 						}else{}
 					?>
           <!-- Content Row -->
-
           <div class="row">
-						
-            <!-- Pie Chart -->
+						            <!-- Pie Chart -->
             <div class="col-lg-4 col-md-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
@@ -95,14 +152,41 @@ function mostrar_lista() {
                         <h4><?php echo $user_sql->user_nick; ?></h4>
                         <small>Miembro desde <?php echo date("d-m-Y", strtotime($user_sql->user_registered));?></small>
                         <p>
-                          <a href="#" target="_blank"><i class="fas fa-globe fa-2x"></i></a>
-													<a href="#" target="_blank"><i class="fab fa-twitter-square fa-2x"></i></a>
+                          <?php
+														if (!empty($user_sql->web)){
+															$placeholder_web = $user_sql->web;
+															echo '<a href='.$user_sql->web.' target="_blank"><i class="fas fa-globe fa-2x"></i></a>';
+														} else {}
+													?>
+													<?php
+														if (!empty($user_sql->twitter)){
+															$placeholder_twitter = $user_sql->twitter;
+															echo '<a href="http://twitter.com/'.$user_sql->twitter.'" target="_blank"><i class="fab fa-twitter-square fa-2x"></i></a>';
+														} else {}
+													?>
+													<?php
+														if (!empty($user_sql->instagram)){
+															$placeholder_instagram = $user_sql->instagram;
+															echo '<a href="http://instagram.com/'.$user_sql->instagram.'" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>';
+														} else {}
+													?>
+													
 												</p>
                     </div>
-									
-                </div>
-              </div>
-            </div>
+									</div>
+									<?php if ($_GET['id']==$_SESSION['id']){ ?>
+									<div class="row">
+										<div class="col-12">
+										<hr>
+											<p><a href="#" data-toggle="modal" data-target="#CambiarFoto"><i class="fas fa-user"></i> ¿Cómo cambio mi foto?</a></p>
+											<p><a href="#" data-toggle="modal" data-target="#EditarPerfil"><i class="fas fa-tools"></i> Editar perfil</a></p> <!-- Modal editar perfil -->
+											<p><a href="#" data-toggle="modal" data-target="#CambiarPass"><i class="fas fa-key"></i> Cambiar contraseña</a></p>
+											<p><a href="#" data-toggle="modal" data-target="#BorrarCuenta" class="text-danger"><i class="fas fa-trash-alt"></i> Eliminar cuenta</a></p> <!-- Modal confirmación -->
+										</div>
+									</div>
+									<?php }else{} ?>
+								</div>
+							</div>
 						</div>
             <!-- Area Chart -->
             <div class="col-lg-8 col-md-12">
@@ -163,7 +247,117 @@ function mostrar_lista() {
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
+	
+	<!-- MODAL CAMBIO FOTO -->
+	<div class="modal fade" id="CambiarFoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">¿Cómo cambio mi foto?</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>Apuntomatic utiliza Gravatar para gestionar las imágenes de perfil. Regístrate en <a href="https://es.gravatar.com/" target="_blank">Gravatar</a> con el mismo email que en Apuntomatic y sube ahi tu imagen de perfil. Esta imagen aparecerá en otros muchos servicios que utilizan Gravatar como gestor de avatares, como StackOverflow, Disqus o la web de American Idol (quién sabe...)</p>
+					<a type="button" class="btn btn-outline-info btn-lg btn-block"" href="https://es.gravatar.com/" target="_blank"><i class="fas fa-external-link-alt"></i> Ir a Gravatar</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- MODAL EDITAR PERFIL -->
+		<div class="modal fade" id="EditarPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Editar perfil</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form class="form" action="<?php $_SERVER['PHP_SELF']?>?id=<?php echo $_SESSION['id']?>" method="post">
+						<div class="form-group">
+							<label for="web"><i class="fas fa-globe"></i> Página web</label>
+							<input type="text" class="form-control" name="web" id="web" placeholder="<?php if (isset($placeholder_web)) {echo $placeholder_web;} else{echo 'http://www.ejemplo.com';} ?>" required>
+						</div>
+						<div class="form-group">
+							<label for="web"><i class="fab fa-twitter-square"></i> Twitter</label>
+							<input type="text" class="form-control" name="twitter"  placeholder="<?php if (isset($placeholder_twitter)) {echo '@'.$placeholder_twitter;} else{echo '@Usuario';} ?>" required>
+						</div>
+						<div class="form-group">
+							<label for="web"><i class="fab fa-instagram"></i> Instagram</label>
+							<input type="text" class="form-control" name="instagram"  placeholder="<?php if (isset($placeholder_instagram)) {echo '@'.$placeholder_instagram;} else{echo '@Usuario';} ?>" required>
+						</div>
+							<input type="submit" name="enviar_editar_perfil" value="Enviar" class="btn btn-primary btn-lg btn-block"/>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- MODAL CAMBIAR CONTRASEÑA -->
+	<div class="modal fade" id="CambiarPass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Cambiar contraseña</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form class="form center-block" action="<?php $_SERVER['PHP_SELF']?>?id=<?php echo $_SESSION['id']?>" method="post">
+						<div class="form-group">
+							<input type="password" class="form-control input-lg" name="antigua_clave"  placeholder="Contraseña actual" required>
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control input-lg" name="usuario_clave"  placeholder="Nueva contraseña" required>
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control input-lg" name="usuario_clave_conf"  placeholder="Confirmar" required>
+						</div>
+							<input type="submit" name="enviar_cambio_pass" value="Enviar" class="btn btn-primary btn-lg btn-block"/>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- MODAL ELIMINAR CUENTA -->
+	<div class="modal fade" id="BorrarCuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Eliminar cuenta</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+				<p>No estás aqui secuestrada/o, si deseas eliminar tu cuenta no tienes más que insertar tu contraseña en el campo de abajo, y automáticamente se borrarán tus datos de Apuntomatic.</p>
+				<p>Recuerda que desde tu perfil <strong>puedes poner los documentos que has subido como anónimos</strong>, y hacer tu <strong>perfil privado</strong>. ¿Puede que eso sea lo que buscas?</p>
+				<hr>
+				<center><strong class="text-danger">Ten en cuenta que esta acción es irreversible.</strong></center>
+				<hr>
+				<form class="form center-block" action="<?=$_SERVER['PHP_SELF']?>?id=<?php echo $_SESSION['id']?>" method="post">
+					<div class="form-group">
+						<input type="password" class="form-control input-lg" name="clave_borrado"  placeholder="Confirma el borrado con tu contraseña" required>
+					</div>
+					<div class="form-group form-check">
+						<input type="checkbox" class="form-check-input" value="confirmar" name="confirmar_borrado" id="confirmar_borrado" required>
+						<label class="form-check-label" for="confirmar_borrado">Confirmo que quiero eliminar mi cuenta</label>
+					</div>
+					<hr>
+					<input type="submit" name="enviar_borrado" value="Borrar Cuenta" class="btn btn-primary btn-lg btn-block"/>
+				</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		
   <!-- JavaScript Externo -->
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
