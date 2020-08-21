@@ -85,12 +85,15 @@ include "modals/galletas.html";
 					<hr>
                     <h1 class="h4 text-gray-900 mb-4">¿Nos conocemos?</h1>
                   </div>
-                  <?php if (isset($_GET['log_er'])) { ?>
-                  <hr>  
-                    <div class="alert alert-danger" role="alert">
-                    Nombre de usuario o contraseña erróneos, inténtalo de nuevo.
-                    </div>
-                  <?php }else{} ?>
+                  <?php if (isset($_GET['log_er'])) {
+										switch ($_GET['log_er']) {
+											case 1: echo '<hr><div class="alert alert-danger" role="alert">Nombre de usuario o contraseña erróneos, inténtalo de nuevo.</div>';
+											break;
+											case 2: echo '<hr><div class="alert alert-success" role="alert">Registro realizado con éxito, ahora ya puedes iniciar sesión y empezar a compartir.</div>';
+											break;
+											case 4: echo '<hr><div class="alert alert-danger" role="alert">Tu cuenta ha sido eliminada correctamente.</div>';
+											break;
+									}}else{}?>
                   <form class="user" id="loginForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" name="nick" placeholder="Usuario">
