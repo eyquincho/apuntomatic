@@ -36,17 +36,10 @@
       <div class="sidebar-heading">
         Config
       </div>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+			<li class="nav-item">
+        <a class="nav-link" href="perfil.php?id=<?php echo $_SESSION['id']; ?>">
           <i class="fas fa-fw fa-user"></i>
-          <span>Perfil</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="perfil.php?id=<?php echo $_SESSION['id']; ?>">Mi perfil</a>
-            <a class="collapse-item" href="perfil-edit.php">Editar</a>
-          </div>
-        </div>
+          <span>Perfil</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="publicidad.php">
@@ -54,10 +47,17 @@
           <span>Publicidad</span></a>
       </li>
 		<?php if ($_SESSION["admin"]==1){?>
-	  <li class="nav-item">
-        <a class="nav-link" href="admin.php">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>Admin</span></a>
+		<li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Administración</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="admin.php">Panel de aprobación</a>
+						<a class="collapse-item" href="#">Estadísticas</a>
+          </div>
+        </div>
       </li>
 		<?php } else {}
 		?>
