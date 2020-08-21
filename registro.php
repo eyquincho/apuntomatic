@@ -41,7 +41,7 @@ function guardar_registro(){
 					// ingresamos los datos a la BD
 					$reg = mysqli_query($_SESSION['con'],"INSERT INTO ap_users (user_nick, user_pass, user_email, user_registered) VALUES ('".$usuario_nombre."', '".$usuario_clave."', '".$usuario_email."', NOW())");
 					if($reg) {
-						echo "<div class=\"alert alert-success\" role=\"alert\">Registro realizado con éxito, ahora ya puedes iniciar sesión y empezar a compartir.</div>";
+						header("Location: index.php?log_er=2");
 					}else {
 						echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error, por favor, ponte en contacto con el Administrador.</div>";
 					}
