@@ -11,8 +11,8 @@
 						<div class="topbar-divider d-none d-sm-block"></div>
 						<!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
-								<span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
-                <img class="img-profile rounded-circle" src="https://www.gravatar.com/avatar/<?php echo $_SESSION["emailhash"]; ?>?s=50">
+								<a href="perfil.php?id=<?php echo $_SESSION['id']; ?>"><span class="mr-2 d-none d-lg-inline text-gray-600 small">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
+                <img class="img-profile rounded-circle" src="https://www.gravatar.com/avatar/<?php echo $_SESSION["emailhash"]; ?>?s=50"></a>
             </li>
 
           </ul>
