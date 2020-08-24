@@ -21,6 +21,7 @@ if($count==0){
 	$md5email = trim ($user_sql->user_email); // "MyEmailAddress@example.com"
 	$md5email = strtolower( $md5email ); // "myemailaddress@example.com"
 	$emailhash= md5( $md5email );
+	
 function mostrar_lista() {
 	$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, creado_ts, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND `usuario_id`=".$_GET['id']." AND `anonimo`=0 AND NOT (`asignatura_id`= 4 OR `asignatura_id`= 38) ORDER BY `id` DESC");
 	while ($seleccionada = mysqli_fetch_object($docs_tabla)) {
@@ -46,6 +47,50 @@ function mostrar_lista() {
 		echo '</tr>';  
   }
 }
+
+function editar_perfil() {
+		if(isset($_POST['enviar_editar_perfil'])) {
+				$activo_sql="SELECT * FROM `ap_users` WHERE user_nick='".$_SESSION['nick']."'";
+				$activo_result=mysqli_query($_SESSION['con'], $activo_sql);
+				$activo_sql = mysqli_fetch_object($activo_result);
+				$usuario_nombre = $_SESSION['nick'];
+				//Web
+				if(isset($_POST['web']) && ($_POST['web'] != $activo_sql->web)) {
+					if(!filter_var($_POST['web'], FILTER_VALIDATE_URL)) { 
+            echo "<div class=\"alert alert-warning\" role=\"alert\">No has insertado una url correcta</div>";
+					}else{
+							$new_web = $_POST['web'];
+							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET web='".$new_web."' WHERE user_nick='".$usuario_nombre."'");
+							if($sql) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Web cambiada correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu web</div>";
+							}
+						}
+					}else{}
+				//Twitter
+				if($_POST['twitter'] != $activo_sql->twitter) {
+							$new_twitter = $_POST['twitter'];
+							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET twitter='".$new_twitter."' WHERE user_nick='".$usuario_nombre."'");
+							if($sql) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Usuario de Twitter cambiado correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu usuario de twitter</div>";
+							}
+					}else{}
+				//Instagram
+				if($_POST['instagram'] != $activo_sql->instagram) {
+							$new_instagram = $_POST['instagram'];
+							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET instagram='".$new_instagram."' WHERE user_nick='".$usuario_nombre."'");
+							if($sql) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Usuario de Instagram cambiado correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu usuario de Instagram</div>";
+							}
+				}else{}
+		} else{}
+}
+
 
 function cambio_pass() {
 		if(isset($_POST['enviar_cambio_pass'])) {
@@ -129,6 +174,7 @@ function delete_account(){
 					<?php
 						cambio_pass();
 						delete_account();
+						editar_perfil();
 						if (isset($_GET['ec']) && $_GET['ec']==1){
 							echo "<div class=\"alert alert-warning\" role=\"alert\">El usuario que buscas no existe o es privado</div>";
 						}else{}
@@ -152,21 +198,26 @@ function delete_account(){
                         <h4><?php echo $user_sql->user_nick; ?></h4>
                         <small>Miembro desde <?php echo date("d-m-Y", strtotime($user_sql->user_registered));?></small>
                         <p>
+													<?php 
+														$sql_rrss="SELECT * FROM $tbl_name WHERE ID='$id_usuario'";
+														$result_rrss=mysqli_query($_SESSION['con'], $sql_rrss);
+														$user_sql_rrss = mysqli_fetch_object($result_rrss);
+														$placeholder_web = $user_sql_rrss->web;
+														$placeholder_twitter = $user_sql_rrss->twitter;
+														$placeholder_instagram = $user_sql_rrss->instagram;
+													?>
                           <?php
-														if (!empty($user_sql->web)){
-															$placeholder_web = $user_sql->web;
+														if (!empty($placeholder_web)){
 															echo '<a href='.$user_sql->web.' target="_blank"><i class="fas fa-globe fa-2x"></i></a>';
 														} else {}
 													?>
 													<?php
-														if (!empty($user_sql->twitter)){
-															$placeholder_twitter = $user_sql->twitter;
+														if (!empty($placeholder_twitter)){
 															echo '<a href="http://twitter.com/'.$user_sql->twitter.'" target="_blank"><i class="fab fa-twitter-square fa-2x"></i></a>';
 														} else {}
 													?>
 													<?php
-														if (!empty($user_sql->instagram)){
-															$placeholder_instagram = $user_sql->instagram;
+														if (!empty($placeholder_instagram)){
 															echo '<a href="http://instagram.com/'.$user_sql->instagram.'" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>';
 														} else {}
 													?>
@@ -278,15 +329,15 @@ function delete_account(){
 					<form class="form" action="<?php $_SERVER['PHP_SELF']?>?id=<?php echo $_SESSION['id']?>" method="post">
 						<div class="form-group">
 							<label for="web"><i class="fas fa-globe"></i> Página web</label>
-							<input type="text" class="form-control" name="web" id="web" placeholder="<?php if (isset($placeholder_web)) {echo $placeholder_web;} else{echo 'http://www.ejemplo.com';} ?>" required>
+							<input type="text" class="form-control" name="web" id="web" <?php if (!empty($placeholder_web)) {echo 'value="'.$placeholder_web.'"';} else{echo 'placeholder="http://www.ejemplo.com"';} ?>>
 						</div>
 						<div class="form-group">
 							<label for="web"><i class="fab fa-twitter-square"></i> Twitter</label>
-							<input type="text" class="form-control" name="twitter"  placeholder="<?php if (isset($placeholder_twitter)) {echo '@'.$placeholder_twitter;} else{echo '@Usuario';} ?>" required>
+							<input type="text" class="form-control" name="twitter" <?php if (!empty($placeholder_twitter)) {echo 'value="'.$placeholder_twitter.'"';} else{echo 'placeholder="Usuario de Twitter"';} ?>>
 						</div>
 						<div class="form-group">
 							<label for="web"><i class="fab fa-instagram"></i> Instagram</label>
-							<input type="text" class="form-control" name="instagram"  placeholder="<?php if (isset($placeholder_instagram)) {echo '@'.$placeholder_instagram;} else{echo '@Usuario';} ?>" required>
+							<input type="text" class="form-control" name="instagram" <?php if (!empty($placeholder_instagram)) {echo 'value="'.$placeholder_instagram.'"';} else{echo 'placeholder="Usuario de Instagram"';} ?>>
 						</div>
 							<input type="submit" name="enviar_editar_perfil" value="Enviar" class="btn btn-primary btn-lg btn-block"/>
 					</form>
