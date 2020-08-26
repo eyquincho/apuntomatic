@@ -37,10 +37,22 @@ if (isset($_POST['asignaturas'])) {
 					<td>Fecha</td>
 					<td><center><?php echo $uploader;?></center></td>
 					<td><center><?php echo $seleccionada->descargas;?></center></td>
-					<td><center><a href="<?php echo $seleccionada->file?>" onclick="window.open(\'descargar.php?id=<?php echo $seleccionada->id;?>\')" target="_blank"><i class="fas fa-cloud-download-alt fa-2x"></i></a>
+					<td><center><a href="<?php echo $seleccionada->file?>" onclick="contador<?php echo $seleccionada->id; ?>()" target="_blank"><i class="fas fa-cloud-download-alt fa-2x"></i></a>
 					<a href="#" title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fas fa-exclamation-circle fa-2x text-danger"></i></a></center></td>
 				</tr>
+				<script>
+					function contador<?php echo $seleccionada->id; ?>() {
+						$.ajax({
+								 type: "POST",
+								 url: <?php echo '\'descargar.php?id='. $seleccionada->id.'\''?>,
+								 data:{action:'contar'},
+								 success:function(html) {
+									 alert(html);
+								 }
 
+						});
+						}
+				</script>
 				<!-- ******************* -->
 				<!-- Modal denunciar documento -->
 				<div class="modal fade" id="modal_denuncia<?php echo $div_id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
@@ -69,6 +81,7 @@ if (isset($_POST['asignaturas'])) {
 						</div>
 					</div>
 				</div>
+				
 				<?php			
 			}
 		}

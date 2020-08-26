@@ -38,13 +38,26 @@ function mostrar_lista() {
     echo '<td><center>' . $pet_asignatura->opcion . '</center></td>';
 		echo '<td><center>' . $pet_titulacion->opcion . '</center></td>';
 		echo '<td><center>' . date("d-m-Y", strtotime($seleccionada->creado_ts)) . '</center></td>';
-		echo '<td><center><a href="'. $seleccionada->file .'" onclick="window.open(\'descargar.php?id='. $seleccionada->id .'\')" target="_blank"><i class="fa fa-chevron-circle-down"></i></a>';
+		echo '<td><center><a href="'. $seleccionada->file .'" onclick="contador'. $seleccionada->id .'()" target="_blank"><i class="fa fa-chevron-circle-down"></i></a>';
 		if ($_GET['id']==$_SESSION['id']){
 			echo ' <i class="fas fa-edit"></center></td>';
 		}else {
 			echo '</center></td>';
 			}
-		echo '</tr>';  
+		echo '</tr>'; 
+		?><script>
+			function contador<?php echo $seleccionada->id; ?>() {
+				$.ajax({
+						 type: "POST",
+						 url: <?php echo '\'descargar.php?id='. $seleccionada->id.'\''?>,
+						 data:{action:'contar'},
+						 success:function(html) {
+							 alert(html);
+						 }
+
+				});
+				}
+		</script><?php
   }
 }
 

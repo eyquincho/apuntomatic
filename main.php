@@ -31,8 +31,23 @@ function mostrar_lista() {
     echo '<td><center>' . $pet_asignatura->opcion . '</center></td>';
 		echo '<td><center>' . $pet_titulacion->opcion . '</center></td>';
 		echo '<td><center>' . $uploader . '</center></td>';
-		echo '<td><center><a href="'. $seleccionada->file .'" onclick="window.open(\'descargar.php?id='. $seleccionada->id .'\')" target="_blank"><i class="fa fa-chevron-circle-down fa-2x"></i></a></center></td>';
-		echo '</tr>';  
+		echo '<td><center><a href="'. $seleccionada->file .'" onclick="contador'. $seleccionada->id .'()" target="_blank"><i class="fa fa-chevron-circle-down fa-2x"></i></a></center></td>';
+		echo '</tr>'; 
+		?>
+		<script>
+			function contador<?php echo $seleccionada->id; ?>() {
+				$.ajax({
+						 type: "POST",
+						 url: <?php echo '\'descargar.php?id='. $seleccionada->id.'\''?>,
+						 data:{action:'contar'},
+						 success:function(html) {
+							 alert(html);
+						 }
+
+				});
+				}
+		</script>
+		<?php
   }
 }
 
@@ -243,6 +258,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
 
   <!-- JavaScript propio -->
   <script src="js/tablas-apuntomatic.js"></script>
+
 
 </body>
 </html>
