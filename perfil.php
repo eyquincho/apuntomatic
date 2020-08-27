@@ -23,7 +23,12 @@ if($count==0){
 	$emailhash= md5( $md5email );
 	
 function mostrar_lista() {
-	$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, creado_ts, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND `usuario_id`=".$_GET['id']." AND `anonimo`=0 AND NOT (`asignatura_id`= 4 OR `asignatura_id`= 38) ORDER BY `id` DESC");
+	if ($_GET['id']==$_SESSION['id']){
+		$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, creado_ts, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND `usuario_id`=".$_GET['id']." ORDER BY `id` DESC");
+	}
+	else {
+		$docs_tabla = mysqli_query($_SESSION['con'], "SELECT id, creado_ts, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `relacion`=0 AND `usuario_id`=".$_GET['id']." AND `anonimo`=0 AND NOT (`asignatura_id`= 4 OR `asignatura_id`= 38) ORDER BY `id` DESC");
+	}
 	while ($seleccionada = mysqli_fetch_object($docs_tabla)) {
 		$petnomuser = mysqli_query($_SESSION['con'], "SELECT user_nick FROM `ap_users` WHERE `ID` = ". $seleccionada->usuario_id . "");
 		$consnomuser = mysqli_fetch_object($petnomuser);
@@ -40,7 +45,42 @@ function mostrar_lista() {
 		echo '<td><center>' . date("d-m-Y", strtotime($seleccionada->creado_ts)) . '</center></td>';
 		echo '<td><center><a href="'. $seleccionada->file .'" onclick="contador'. $seleccionada->id .'()" target="_blank"><i class="fa fa-chevron-circle-down"></i></a>';
 		if ($_GET['id']==$_SESSION['id']){
-			echo ' <i class="fas fa-edit"></center></td>';
+			?>
+			<a href="#" title="Editar documento" data-target="#modal_edit<?php echo $seleccionada->id;?>" data-toggle="modal"><i class="fas fa-edit"></i></a></center></td>
+				<div class="modal fade" id="modal_edit<?php echo $seleccionada->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="titulo-modal">Editar documento </h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">
+								<form name="enviaredit" id="form-edit" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post">
+								<div class="form-group">
+									<strong>Nombre del documento</strong>
+									<input type="text" class="form-control" id="EDIT-titulo" name="EDIT-titulo" value="<?php echo urldecode($seleccionada->nombre);?>">
+								</div>
+								<div class="form-group">
+									<strong>Descripción del documento</strong>
+									<textarea class="form-control" id="EDIT-decripcion" name="EDIT-decripcion" rows="3"><?php echo urldecode($seleccionada->descripcion); ?></textarea>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" value="" id="anonimo" <?php if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1') {	echo 'checked';}	else {}?>>
+									<label class="form-check-label" for="anonimo">
+										Mostrar como anónimo
+									</label>
+								</div>
+								<input type="hidden" id="EDITarchivo" name="EDITarchivo" value="<?php echo $seleccionada->id;?>">
+							</div>
+							<div class="modal-footer">
+								<a href="#"><i class="fas fa-trash-alt text-danger"></i></a>
+								<input class="btn btn-info" name="EDIT-boton" type="submit" value="Enviar edición" id="EDIT-boton">
+								<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+							</div></form>
+						</div>
+					</div>
+				</div>
+			<?php
 		}else {
 			echo '</center></td>';
 			}
@@ -59,6 +99,49 @@ function mostrar_lista() {
 				}
 		</script><?php
   }
+}
+
+function editar_documento() {
+		if(isset($_POST['EDIT-boton'])) {
+				$activo_sql="SELECT * FROM `ap_users` WHERE user_nick='".$_SESSION['nick']."'";
+				$activo_result=mysqli_query($_SESSION['con'], $activo_sql);
+				$activo_sql = mysqli_fetch_object($activo_result);
+				$usuario_nombre = $_SESSION['nick'];
+				//Web
+				if(isset($_POST['web']) && ($_POST['web'] != $activo_sql->web)) {
+					if(!filter_var($_POST['web'], FILTER_VALIDATE_URL)) { 
+            echo "<div class=\"alert alert-warning\" role=\"alert\">No has insertado una url correcta</div>";
+					}else{
+							$new_web = $_POST['web'];
+							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET web='".$new_web."' WHERE user_nick='".$usuario_nombre."'");
+							if($sql) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Web cambiada correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu web</div>";
+							}
+						}
+					}else{}
+				//Twitter
+				if($_POST['twitter'] != $activo_sql->twitter) {
+							$new_twitter = $_POST['twitter'];
+							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET twitter='".$new_twitter."' WHERE user_nick='".$usuario_nombre."'");
+							if($sql) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Usuario de Twitter cambiado correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu usuario de twitter</div>";
+							}
+					}else{}
+				//Instagram
+				if($_POST['instagram'] != $activo_sql->instagram) {
+							$new_instagram = $_POST['instagram'];
+							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET instagram='".$new_instagram."' WHERE user_nick='".$usuario_nombre."'");
+							if($sql) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Usuario de Instagram cambiado correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu usuario de Instagram</div>";
+							}
+				}else{}
+		} else{}
 }
 
 function editar_perfil() {
@@ -155,6 +238,8 @@ function delete_account(){
 			}
 		}else{}
 	}
+
+
 
 ?>
 <!DOCTYPE html>
