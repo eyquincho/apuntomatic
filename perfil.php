@@ -47,6 +47,7 @@ function mostrar_lista() {
 		if ($_GET['id']==$_SESSION['id']){
 			?>
 			<a href="#" title="Editar documento" data-target="#modal_edit<?php echo $seleccionada->id;?>" data-toggle="modal"><i class="fas fa-edit"></i></a></center></td>
+				<!-- Modal editar documento -->
 				<div class="modal fade" id="modal_edit<?php echo $seleccionada->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -55,28 +56,60 @@ function mostrar_lista() {
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 							</div>
 							<div class="modal-body">
-								<form name="enviaredit" id="form-edit" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post">
+								<form name="enviaredit" id="form-edit" action="<?php $_SERVER['PHP_SELF']?>?id=<?php echo $_SESSION['id']?>" enctype="multipart/form-data" method="post">
 								<div class="form-group">
 									<strong>Nombre del documento</strong>
 									<input type="text" class="form-control" id="EDIT-titulo" name="EDIT-titulo" value="<?php echo urldecode($seleccionada->nombre);?>">
 								</div>
 								<div class="form-group">
 									<strong>Descripción del documento</strong>
-									<textarea class="form-control" id="EDIT-decripcion" name="EDIT-decripcion" rows="3"><?php echo urldecode($seleccionada->descripcion); ?></textarea>
+									<textarea class="form-control" id="EDIT-descripcion" name="EDIT-descripcion" rows="3"><?php echo urldecode($seleccionada->descripcion); ?></textarea>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" value="" id="anonimo" <?php if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1') {	echo 'checked';}	else {}?>>
+									<input class="form-check-input" type="checkbox" value="" name="EDIT-anonimo" id="EDIT-anonimo" <?php if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1') {	echo 'checked';}	else {}?>>
 									<label class="form-check-label" for="anonimo">
 										Mostrar como anónimo
 									</label>
 								</div>
-								<input type="hidden" id="EDITarchivo" name="EDITarchivo" value="<?php echo $seleccionada->id;?>">
+								<input type="hidden" id="EDIT-id" name="EDIT-id" value="<?php echo $seleccionada->id;?>">
 							</div>
 							<div class="modal-footer">
-								<a href="#"><i class="fas fa-trash-alt text-danger"></i></a>
+								<a href="#" data-target="#EliminarDocumento<?php echo $seleccionada->id;?>" data-toggle="modal"><i class="fas fa-trash-alt text-danger"></i></a>
 								<input class="btn btn-info" name="EDIT-boton" type="submit" value="Enviar edición" id="EDIT-boton">
 								<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
 							</div></form>
+						</div>
+					</div>
+				</div>
+				<!-- Modal eliminar documento -->
+				<div class="modal fade" id="EliminarDocumento<?php echo $seleccionada->id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="myModalLabel">Eliminar documento</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">
+							<p>Recuerda que <strong>puedes poner los documentos que has subido como anónimos</strong>, editarlos y hacer tu <strong>perfil privado</strong>. ¿Puede que eso sea lo que buscas?</p>
+							<hr>
+							<center><strong class="text-danger">Ten en cuenta que esta acción es irreversible.</strong></center>
+							<hr>
+							<form class="form center-block" action="<?=$_SERVER['PHP_SELF']?>?id=<?php echo $_SESSION['id']?>" method="post">
+								<div class="form-group">
+									<input type="password" class="form-control input-lg" name="clave_borrado_documento"  placeholder="Confirma el borrado del documento con tu contraseña" required>
+								</div>
+								<div class="form-group form-check">
+									<input type="checkbox" class="form-check-input" value="confirmar" name="confirmar_borrado_documento" id="confirmar_borrado_documento" required>
+									<label class="form-check-label" for="confirmar_borrado_documento">Confirmo que quiero eliminar el documento</label>
+								</div>
+								<input type="hidden" id="eliminar-doc-id" name="eliminar-doc-id" value="<?php echo $seleccionada->id;?>">
+								<hr>
+								<input type="submit" name="enviar_borrado_documento" value="Eliminar documento" class="btn btn-primary btn-lg btn-block"/>
+							</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -101,49 +134,77 @@ function mostrar_lista() {
   }
 }
 
-function editar_documento() {
-		if(isset($_POST['EDIT-boton'])) {
-				$activo_sql="SELECT * FROM `ap_users` WHERE user_nick='".$_SESSION['nick']."'";
-				$activo_result=mysqli_query($_SESSION['con'], $activo_sql);
-				$activo_sql = mysqli_fetch_object($activo_result);
-				$usuario_nombre = $_SESSION['nick'];
-				//Web
-				if(isset($_POST['web']) && ($_POST['web'] != $activo_sql->web)) {
-					if(!filter_var($_POST['web'], FILTER_VALIDATE_URL)) { 
-            echo "<div class=\"alert alert-warning\" role=\"alert\">No has insertado una url correcta</div>";
-					}else{
-							$new_web = $_POST['web'];
-							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET web='".$new_web."' WHERE user_nick='".$usuario_nombre."'");
-							if($sql) {
-								echo "<div class=\"alert alert-success\" role=\"alert\">Web cambiada correctamente</div>";
-							}else {
-								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu web</div>";
-							}
-						}
-					}else{}
-				//Twitter
-				if($_POST['twitter'] != $activo_sql->twitter) {
-							$new_twitter = $_POST['twitter'];
-							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET twitter='".$new_twitter."' WHERE user_nick='".$usuario_nombre."'");
-							if($sql) {
-								echo "<div class=\"alert alert-success\" role=\"alert\">Usuario de Twitter cambiado correctamente</div>";
-							}else {
-								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu usuario de twitter</div>";
-							}
-					}else{}
-				//Instagram
-				if($_POST['instagram'] != $activo_sql->instagram) {
-							$new_instagram = $_POST['instagram'];
-							$sql = mysqli_query($_SESSION['con'], "UPDATE ap_users SET instagram='".$new_instagram."' WHERE user_nick='".$usuario_nombre."'");
-							if($sql) {
-								echo "<div class=\"alert alert-success\" role=\"alert\">Usuario de Instagram cambiado correctamente</div>";
-							}else {
-								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar tu usuario de Instagram</div>";
-							}
-				}else{}
-		} else{}
+function eliminar_documento() {
+	if(isset($_POST['enviar_borrado_documento'])){
+		if(isset($_POST['confirmar_borrado_documento'])) {
+			$id_archivo = $_POST['eliminar-doc-id'];
+			$doc_activo_sql="SELECT * FROM `ap_documentos` WHERE id='".$id_archivo."'";
+			$doc_activo_result=mysqli_query($_SESSION['con'], $doc_activo_sql);
+			$doc_activo_sql = mysqli_fetch_object($doc_activo_result);
+			$password=$_POST['clave_borrado_documento'];
+			$password = MD5(stripslashes($password));
+			$pet_oldkey2 = mysqli_query($_SESSION['con'], "SELECT user_pass FROM `ap_users` WHERE `user_nick` = '". $_SESSION['nick'] . "'");
+			$oldkey2 = mysqli_fetch_object($pet_oldkey2);
+			if ($oldkey2->user_pass != $password){
+				echo "<div class=\"alert alert-danger\" role=\"alert\">La contraseña no es correcta.</div>";
+			}
+			else {
+				$ar = $doc_activo_sql->file;
+				$eliminar_archivo = unlink($ar);
+				$borrar_archivo_bd = mysqli_query($_SESSION['con'], "DELETE FROM `ap_documentos` WHERE `id` = '".$id_archivo."'");
+				if ($eliminar_archivo && $borrar_archivo_bd) {
+					echo "<div class=\"alert alert-success\" role=\"alert\">Archivo eliminado correctamente</div>";
+				}	else {
+					echo "<div class=\"alert alert-danger\" role=\"alert\">No se ha podido borrar el archivo.</div>";
+				}
+			
+			}
+		} 
+			else {
+				echo "<div class=\"alert alert-danger\" role=\"alert\">No has confirmado que quieres borrar el documento.</div>";
+			}
+		}else{}
 }
 
+function editar_documento() {
+		if(isset($_POST['EDIT-boton'])) {
+				$id_archivo = $_POST['EDIT-id'];
+				$doc_activo_sql="SELECT * FROM `ap_documentos` WHERE id='".$id_archivo."'";
+				$doc_activo_result=mysqli_query($_SESSION['con'], $doc_activo_sql);
+				$doc_activo_sql = mysqli_fetch_object($doc_activo_result);
+				if(isset($_POST['EDIT-titulo']) && (urlencode($_POST['EDIT-titulo']) != $doc_activo_sql->nombre)) {
+					$nuevo_titulo_doc = urlencode($_POST['EDIT-titulo']);
+					$sql_nuevo_titulo_doc = mysqli_query($_SESSION['con'], "UPDATE ap_documentos SET nombre='".$nuevo_titulo_doc."' WHERE id='".$id_archivo."'");
+					if($sql_nuevo_titulo_doc) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Titulo cambiado correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar el titulo</div>";
+							}
+					}else{}
+				if(isset($_POST['EDIT-descripcion']) && (urlencode($_POST['EDIT-descripcion']) != $doc_activo_sql->descripcion)) {
+					$nuevo_descripcion_doc = urlencode($_POST['EDIT-descripcion']);
+					$sql_nuevo_descripcion_doc = mysqli_query($_SESSION['con'], "UPDATE ap_documentos SET descripcion='".$nuevo_descripcion_doc."' WHERE id='".$id_archivo."'");
+					if($sql_nuevo_descripcion_doc) {
+								echo "<div class=\"alert alert-success\" role=\"alert\">Descripción cambiada correctamente</div>";
+							}else {
+								echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar la descripcion</div>";
+							}
+					}else{}
+				if(isset($_POST['EDIT-anonimo'])) {
+					$nuevo_anonimo = 1;
+				}else {
+					$nuevo_anonimo = 0;
+				}
+				if (isset($nuevo_anonimo) && ($nuevo_anonimo != $doc_activo_sql->anonimo)) {
+						$sql_nuevo_anonimo_doc = mysqli_query($_SESSION['con'], "UPDATE ap_documentos SET anonimo = NOT anonimo WHERE id='".$id_archivo."'");
+						if($sql_nuevo_anonimo_doc) {
+									echo "<div class=\"alert alert-success\" role=\"alert\">Anonimato modificado correctamente</div>";
+								}else {
+									echo "<div class=\"alert alert-warning\" role=\"alert\">Ha ocurrido un error al tratar de modificar el anonimato</div>";
+								}
+					}else{}
+				}else{}
+}
 function editar_perfil() {
 		if(isset($_POST['enviar_editar_perfil'])) {
 				$activo_sql="SELECT * FROM `ap_users` WHERE user_nick='".$_SESSION['nick']."'";
@@ -273,6 +334,8 @@ function delete_account(){
 						cambio_pass();
 						delete_account();
 						editar_perfil();
+						editar_documento();
+						eliminar_documento();
 						if (isset($_GET['ec']) && $_GET['ec']==1){
 							echo "<div class=\"alert alert-warning\" role=\"alert\">El usuario que buscas no existe o es privado</div>";
 						}else{}
@@ -347,7 +410,7 @@ function delete_account(){
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTableProfile" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Documento</th>
@@ -514,10 +577,7 @@ function delete_account(){
   <script src="js/sb-admin-2.js"></script>
   <script src="js/jquery.dataTables.min.js"></script>
   <script src="js/dataTables.bootstrap4.min.js"></script>
-
   <!-- JavaScript propio -->
   <script src="js/tablas-apuntomatic.js"></script>
-
 </body>
-
 </html>
