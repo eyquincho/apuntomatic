@@ -1,5 +1,4 @@
 <?php
-
 // Si se denuncia un archivo, guardamos la denuncia en la base de datos
 function registrar_denuncia() {
     $DENarchivo = $_POST['DENarchivo'];
@@ -7,16 +6,14 @@ function registrar_denuncia() {
     $DENdenunciante = $_POST['DENdenunciante'];
     $DENmotivo = $_POST['DENmotivo'];
        if(!empty($DENmotivo)) { 
-        $qry_denuncia = "INSERT INTO ap_denuncias ( IDarchivo, IDacusado, IDdenunciante, motivo, resuelto ) VALUES 
-        ('$DENarchivo', '$DENacusado','$DENdenunciante','$DENmotivo','0')";
+        $qry_denuncia = "INSERT INTO ap_denuncias ( den_archivo, den_denunciado, den_denunciante, den_fecha, den_motivo, den_resuelto ) VALUES 
+        ('$DENarchivo', '$DENacusado','$DENdenunciante', NOW(), '$DENmotivo','0')";
         mysqli_query($_SESSION['con'], $qry_denuncia);
         echo "<div style=\"margin-top:40px;\" class=\"alert alert-success\" role=\"alert\">Denuncia enviada. Gracias!</div>";  }
         else {
             echo "<div style=\"margin-top:40px;\" class=\"alert alert-danger\" role=\"alert\">No escribiste un motivo de denuncia</div>";
         }
 }
-
-
 // Lanza el select de asignaturas
 function generaCarreras()
 {
@@ -27,7 +24,6 @@ function generaCarreras()
         echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
     }
 }
-
 function subir_archivo()
 {
     $uploaddir = "documentos/";
@@ -89,5 +85,4 @@ function mostrar_asignatura(){
     echo 'Documentos disponibles de '. $asign_elegida[0] . '.';
 }else{}
 }
-
 ?>
