@@ -62,7 +62,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
 		   $subido = copy($_FILES['archivo']['tmp_name'], $uploadfile); 
 		   $check = $subido && !empty($titulo) && !empty($asignatura);
 		   $qry = "INSERT INTO ap_documentos ( usuario_id, asignatura_id, creado_ts, file, size, nombre, descripcion, tipo, anonimo ) VALUES
-			('$user_id','$asignatura', CURDATE(), '$uploadfile','$size','$titulo','$descripcion', '$tipo', '$anonimo')";
+			('$user_id','$asignatura', NOW(), '$uploadfile','$size','$titulo','$descripcion', '$tipo', '$anonimo')";
 			mysqli_query($_SESSION['con'], $qry);
 			$update_user = "UPDATE ap_users SET user_files=(user_files + 1) WHERE id='$user_id'";
 			mysqli_query($_SESSION['con'], $update_user);
