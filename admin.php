@@ -11,6 +11,44 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
     header("Location: main.php");
     die();
   } else {}
+
+//Lista Denuncias
+function admin_mostrar_lista_denuncias() {
+    $sql_tabla_denuncias = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_denuncias` ORDER BY `id` DESC");    
+	while ($denuncia = mysqli_fetch_object($sql_tabla_denuncias)) {
+		$archivo_denunciado = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_documentos` WHERE `ID` = ". $denuncia->den_archivo . "");
+		$archivo = mysqli_fetch_object($archivo_denunciado);
+    echo '<tr class="text-center">';
+    echo '<td>' . urldecode($archivo->nombre) . '</td>';
+    echo '<td>' . $denuncia->den_denunciado . '</td>';
+    echo '<td>' . $denuncia->den_denunciante . '</td>';
+    echo '<td>' . date("d-m-Y", strtotime($denuncia->den_fecha)) . '</td>';
+    echo '<td><a href="' . $archivo->file . '"><i class="fas fa-download"></i></a>'; ?>
+			<a href="#" title="Resolver Denuncia" data-target="#resolver_denuncia<?php echo $denuncia->id;?>" data-toggle="modal"><i class="fas fa-question-circle"></i></a></td>
+				<!-- Modal editar documento -->
+				<div class="modal fade" id="resolver_denuncia<?php echo $denuncia->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="titulo-modal">Resolver denuncias </h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">
+                <p><strong>Documento: </strong><?php echo urldecode($archivo->nombre);?></p>
+                <p><strong>Motivo: </strong><?php echo urldecode($denuncia->den_motivo);?></p>
+							</div>
+							<div class="modal-footer">
+								<a class="btn btn-danger" href="#" data-target="#EliminarDocumento<?php echo $denuncia->den_Archivo;?>" data-toggle="modal">Borrar archivo</a>
+                <a class="btn btn-info" href="#" data-target="#IgnorarDenuncia<?php echo $denuncia->den_Archivo;?>" data-toggle="modal">Ignorar denuncia</a>
+								<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+							</div>
+						</div>
+					</div>
+				</div>			
+      <?php
+		echo '</td></tr>'; 
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -111,34 +149,24 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Doc</th>
-                      <th>Usuario</th>
-                      <th>Documento</th>
-                      <th>Asignatura</th>
-                      <th>Titulación</th>
-                      <th>Enlace</th>
+                      <th>Archivo</th>
+                      <th>Denunciado</th>
+                      <th>Denunciante</th>
+                      <th>Fecha</th>
+                      <th>Opciones</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Doc</th>
-                      <th>Usuario</th>
-                      <th>Documento</th>
-                      <th>Asignatura</th>
-                      <th>Titulación</th>
-                      <th>Enlace</th>
+                      <th>Archivo</th>
+                      <th>Denunciado</th>
+                      <th>Denunciante</th>
+                      <th>Fecha</th>
+                      <th>Opciones</th>
                     </tr>
                   </tfoot>
                   <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    
+                    <?php admin_mostrar_lista_denuncias(); ?>                    
                   </tbody>
                 </table>
               </div>
