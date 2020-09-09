@@ -14,11 +14,9 @@ if (isset($_POST['asignaturas'])) {
 // Recoge las filas de documentos para una asignatura concreta.
 			
 		function mostrar_lista() {
-			$docs = mysqli_query($_SESSION['con'], "SELECT id, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `asignatura_id` =". $_POST['asignaturas'] ." AND `relacion`=0");
+			$docs = mysqli_query($_SESSION['con'], "SELECT id, usuario_id, asignatura_id, creado_ts, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `asignatura_id` =". $_POST['asignaturas'] ." AND `relacion`=0");
 			while ($seleccionada = mysqli_fetch_object($docs)) {
 				$div_id= $seleccionada->id;
-				$edits = mysqli_query($_SESSION['con'], "SELECT id, usuario_id, asignatura_id, file, size, nombre, descripcion, tipo, descargas, anonimo FROM `ap_documentos` WHERE `original` =". $div_id ." AND `relacion`=1");
-				$num_edits = mysqli_num_rows($edits);
 				$petnomuser = mysqli_query($_SESSION['con'], "SELECT id, user_nick FROM `ap_users` WHERE `ID` = ". $seleccionada->usuario_id . "");
 				$consnomuser = mysqli_fetch_object($petnomuser);
 				if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1')
@@ -30,15 +28,15 @@ if (isset($_POST['asignaturas'])) {
 				}
 				
 				?>
-				<tr>
-					<td><center><i class="fas fa-file-<?php echo $seleccionada->tipo; ?>"></i><br>(<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</center></td>
-					<td><center><?php echo urldecode($seleccionada->nombre);?></center></td>
-					<td><center><?php echo urldecode($seleccionada->descripcion);?></center></td>
-					<td>Fecha</td>
-					<td><center><?php echo $uploader;?></center></td>
-					<td><center><?php echo $seleccionada->descargas;?></center></td>
-					<td><center><a href="<?php echo $seleccionada->file?>" onclick="contador<?php echo $seleccionada->id; ?>()" target="_blank"><i class="fas fa-cloud-download-alt fa-2x"></i></a>
-					<a href="#" title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fas fa-exclamation-circle fa-2x text-danger"></i></a></center></td>
+				<tr class="text-center">
+					<td><i class="fas fa-file-<?php echo $seleccionada->tipo; ?>"></i><br>(<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</td>
+					<td><?php echo urldecode($seleccionada->nombre);?></td>
+					<td><?php echo urldecode($seleccionada->descripcion);?></td>
+					<td><?php echo date("d-m-Y", strtotime($seleccionada->creado_ts)); ?></td>
+					<td><?php echo $uploader;?></td>
+					<td><?php echo $seleccionada->descargas;?></td>
+					<td><a href="<?php echo $seleccionada->file?>" onclick="contador<?php echo $seleccionada->id; ?>()" target="_blank"><i class="fas fa-cloud-download-alt fa-2x"></i></a>
+					<a href="#" title="Denunciar documento" data-target="#modal_denuncia<?php echo $div_id;?>" data-toggle="modal"><i class="fas fa-exclamation-circle fa-2x text-danger"></i></a></td>
 				</tr>
 				<script>
 					function contador<?php echo $seleccionada->id; ?>() {
@@ -71,8 +69,8 @@ if (isset($_POST['asignaturas'])) {
 									<textarea class="form-control" rows="3" id="DENmotivo" name="DENmotivo" placeholder="Describe brevemente los motivos de denuncia"></textarea>
 								</div>
 								<input type="hidden" id="DENarchivo" name="DENarchivo" value="<?php echo $div_id;?>">
-								<input type="hidden" id="DENdenunciante" name="DENdenunciante" value="<?php echo $_SESSION['id']; ?>">
-								<input type="hidden" id="DENacusado" name="DENacusado" value="<?php echo $consnomuser->id; ?>"> 
+								<input type="hidden" id="DENdenunciante" name="DENdenunciante" value="<?php echo $_SESSION['nick']; ?>">
+								<input type="hidden" id="DENacusado" name="DENacusado" value="<?php echo $consnomuser->user_nick; ?>"> 
 							</div>
 							<div class="modal-footer">
 								<input class="btn btn-danger" name="DENboton" type="submit" value="Enviar denuncia" id="DENboton">
