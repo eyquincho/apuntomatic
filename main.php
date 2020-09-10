@@ -52,7 +52,7 @@ function mostrar_lista() {
 }
 
 // Publicidad
-$sql_anuncio = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE `aprobado`= 1 ORDER BY RAND() LIMIT 1");
+$sql_anuncio = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE `aprobado`= 1 AND NOW() BETWEEN `inicio` AND DATE_ADD(`fin`, INTERVAL 1 DAY) ORDER BY RAND() LIMIT 1");
 $pet_anuncio = mysqli_fetch_object($sql_anuncio);
 $mostrar_anuncio_url = $pet_anuncio->url;
 $mostrar_anuncio_img = $pet_anuncio->imagen;
@@ -97,7 +97,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
       <div id="content">
           <?php include "header.php" ?>
         <div class="container-fluid">
-
+        <div class="alert alert-danger" role="alert">Estamos trabajando en desplegar completamente la nueva versión de Apuntomatic. Si encuentras algún bug, no dudes en ponerte en contacto.</div>
           <!-- Content Row -->
           <div class="row">
 
