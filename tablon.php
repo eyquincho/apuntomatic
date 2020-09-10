@@ -9,7 +9,7 @@ conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
 <?php
 	function imprimeTarjetas() {
-		$consulta_tarjetas = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_tablon`");
+		$consulta_tarjetas = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_tablon` WHERE `aprobado`='1' AND NOW() BETWEEN `fecha_inicio` AND DATE_ADD(`fecha_final`, INTERVAL 1 DAY)");
 			// Voy imprimiendo el primer select compuesto por los carreras
 			while($tarjeta=mysqli_fetch_row($consulta_tarjetas))
 			{
@@ -34,10 +34,10 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
 			$fecha_final = $_POST['nueva_tarjeta_final'];
 			$usuario_tarjeta = $_SESSION["nick"];
 			$usuario_id_tarjeta = $_SESSION["id"];
-			$qry = "INSERT INTO ap_tablon ( titulo, categoria, contenido, fecha_inicio, fecha_final, usuario, usuario_id ) VALUES
-			('$titulo_tarjeta','$categoria_tarjeta', '$contenido_tarjeta','$fecha_inicio','$fecha_final','$usuario_tarjeta', '$usuario_id_tarjeta')";
+			$qry = "INSERT INTO ap_tablon ( titulo, categoria, contenido, fecha_inicio, fecha_final, usuario, usuario_id, aprobado) VALUES
+			('$titulo_tarjeta','$categoria_tarjeta', '$contenido_tarjeta','$fecha_inicio','$fecha_final','$usuario_tarjeta', '$usuario_id_tarjeta', '0')";
 			mysqli_query($_SESSION['con'], $qry);
-			echo "<div class=\"alert alert-success\" role=\"alert\">Anuncio publicado correctamente</div>";
+			echo "<div class=\"alert alert-success\" role=\"alert\">Tu anuncio se ha enviado para aprobación</div>";
 		}
 	}
 ?>
