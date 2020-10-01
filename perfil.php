@@ -369,7 +369,7 @@ function delete_account(){
 													?>
                           <?php
 														if (!empty($placeholder_web)){
-															echo '<a href='.$user_sql->web.' target="_blank"><i class="fas fa-globe fa-2x"></i></a>';
+															echo '<a href="'.$user_sql->web.'" target="_blank"><i class="fas fa-globe fa-2x"></i></a>';
 														} else {}
 													?>
 													<?php
