@@ -97,7 +97,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
       <div id="content">
           <?php include "header.php" ?>
         <div class="container-fluid">
-        <div class="alert alert-danger" role="alert">Estamos trabajando en desplegar completamente la nueva versión de Apuntomatic. Si encuentras algún bug, no dudes en ponerte en contacto. Puedes ver los frentes abiertos <a href="https://github.com/eyquincho/apuntomatic/issues" target="_blank">aqui</a></div>
+        <div class="alert alert-danger" role="alert">Estamos trabajando en desplegar completamente la nueva versión de Apuntomatic. Si encuentras algún bug, no dudes en ponerte en contacto. Puedes ver los frentes abiertos <a href="https://github.com/eyquincho/apuntomatic/issues" target="_blank">aqui.</a></div>
           <!-- Content Row -->
           <div class="row">
 
