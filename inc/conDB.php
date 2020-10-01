@@ -1,5 +1,5 @@
 <?php
-require ('config.php');
+require 'config.php';
 // definimos unas constanstes 
 // para la conexion a la DB
 define('_SERV', $BD_SERVER); // Servidor

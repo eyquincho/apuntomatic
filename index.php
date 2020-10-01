@@ -3,6 +3,8 @@ session_start();
 ob_start();
 include("inc/conDB.php");
 conexionDB();
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', true);
 $tbl_name="ap_users"; // Table name
 // Comprobamos si hay una sesión iniciada
 if(isset($_SESSION['nick'])){
@@ -39,10 +41,10 @@ if(isset($_SESSION['nick'])){
 	$md5email = trim ($sql_id->user_email); // "MyEmailAddress@example.com"
 	$md5email = strtolower( $md5email ); // "myemailaddress@example.com"
 	$_SESSION["emailhash"]= md5( $md5email );
-    header("location:../apuntomatic/main.php");
+    header("location:../main.php");
     }
     else {
-    header("location:../apuntomatic/index.php?log_er=1");
+    header("location:../index.php?log_er=1");
     }
     ob_end_flush();
   }else{}

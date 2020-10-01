@@ -13,12 +13,12 @@ function mostrar_lista() {
 	while ($seleccionada = mysqli_fetch_object($docs_tabla)) {
 		$petnomuser = mysqli_query($_SESSION['con'], "SELECT user_nick FROM `ap_users` WHERE `ID` = ". $seleccionada->usuario_id . "");
 		$consnomuser = mysqli_fetch_object($petnomuser);
-		$sql_asignatura = mysqli_query($_SESSION['con'], "SELECT opcion, relacion FROM `ap_asignaturas` WHERE `ID` = ". $seleccionada->asignatura_id . "");
+		$sql_asignatura = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_asignaturas` WHERE `ID` = ". $seleccionada->asignatura_id . "");
 		$pet_asignatura = mysqli_fetch_object($sql_asignatura);
-		$sql_curso = mysqli_query($_SESSION['con'], "SELECT opcion, relacion FROM `ap_cursos` WHERE `id` = ". $pet_asignatura->relacion . "");
+		$sql_curso = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_cursos` WHERE `id` = ". $pet_asignatura->relacion . "");
 		$pet_curso = mysqli_fetch_object($sql_curso);
-		$sql_titulacion = mysqli_query($_SESSION['con'], "SELECT opcion FROM `ap_carreras` WHERE `id` = ". $pet_curso->relacion . "");
-		$pet_titulacion = mysqli_fetch_object($sql_titulacion);
+		$sql_titulacion = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_carreras` WHERE `id` = ". $pet_curso->relacion . "");
+    $pet_titulacion = mysqli_fetch_object($sql_titulacion);
 		if(isset($seleccionada->anonimo) && $seleccionada->anonimo == '1')
       {
       $uploader = "Anónimo";
@@ -97,7 +97,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
       <div id="content">
           <?php include "header.php" ?>
         <div class="container-fluid">
-        <div class="alert alert-danger" role="alert">Estamos trabajando en desplegar completamente la nueva versión de Apuntomatic. Si encuentras algún bug, no dudes en ponerte en contacto.</div>
+        <div class="alert alert-danger" role="alert">Estamos trabajando en desplegar completamente la nueva versión de Apuntomatic. Si encuentras algún bug, no dudes en ponerte en contacto. Puedes ver los frentes abiertos <a href="https://github.com/eyquincho/apuntomatic/issues" target="_blank">aqui</a></div>
           <!-- Content Row -->
           <div class="row">
 
