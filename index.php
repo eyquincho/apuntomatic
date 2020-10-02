@@ -41,10 +41,10 @@ if(isset($_SESSION['nick'])){
 	$md5email = trim ($sql_id->user_email); // "MyEmailAddress@example.com"
 	$md5email = strtolower( $md5email ); // "myemailaddress@example.com"
 	$_SESSION["emailhash"]= md5( $md5email );
-    header("location:../main.php");
+    header("location:main.php");
     }
     else {
-    header("location:../index.php?log_er=1");
+    header("location:index.php?log_er=1");
     }
     ob_end_flush();
   }else{}
