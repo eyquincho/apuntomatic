@@ -1,4 +1,5 @@
-inc/config.php
 documentos/
-img/
 error_log
+img/
+inc/config.php
+utilidades/
