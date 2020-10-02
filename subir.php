@@ -27,23 +27,28 @@ mysqli_set_charset($_SESSION['con'], 'utf8'); ?>
  		$uploadfile = $uploaddir . $file;
  		$error = $_FILES['archivo']['error'];
  		$subido = false;
- 		$tipoch = str_replace("application/","",$_FILES["archivo"]["type"]);
-		switch ($tipoch) {
-		    case "vnd.openxmlformats-officedocument.wordprocessingml.document":
-		        $tipo = "docx";
-		        break;
-		    case "vnd.ms-excel":
-		        $tipo = "xls";
-		        break;
-		    case "vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-		        $tipo = "xlsx";
-		        break;
-		    case "vnd.ms-powerpoint":
-		        $tipo = "ppt";
-		        break;
-		    case "ax-rar-compressed":
-		        $tipo = "rar";
-		        break;
+		$ext = pathinfo($_FILES['archivo']['name'], PATHINFO_EXTENSION);
+		switch ($ext) {
+				case "doc":
+				case "docx":
+				case "odt":
+				case "pages":
+				case "txt":
+		      $tipo = "word";
+		    	break;
+				case "ppt":
+				case "pptx":
+					$tipo = "powerpoint";
+					break;
+				case "rar":
+				case "zip":
+					$tipo = "archive";
+					break;
+				case "jpg":
+				case "png":
+					$tipo = "image";
+				default:
+					$tipo = "alt";				
 		}
 		$n = $_SESSION["nick"];
 		$query = "SELECT `ID` FROM `ap_users` WHERE `user_nick`='$n'";
