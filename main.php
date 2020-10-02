@@ -67,6 +67,7 @@ $head_subidas = mysqli_fetch_assoc($result_head_subidas);
 $sql_head_descargas = "SELECT SUM(descargas) AS descargas FROM `ap_documentos` WHERE `usuario_id`= ".$_SESSION['id']."";
 $result_head_descargas = mysqli_query($_SESSION['con'],$sql_head_descargas);
 $head_descargas = mysqli_fetch_assoc($result_head_descargas);
+if ($head_descargas['descargas']==0){$num_descargas_totales = 0;} else {$num_descargas_totales = $head_descargas['descargas'];}
 
 
 ?>
@@ -125,7 +126,7 @@ $head_descargas = mysqli_fetch_assoc($result_head_descargas);
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Descargas de tus archivos</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $head_descargas['descargas']; ?></div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $num_descargas_totales; ?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-download fa-2x text-gray-300"></i>
