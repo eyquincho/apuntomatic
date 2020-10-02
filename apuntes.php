@@ -29,7 +29,7 @@ if (isset($_POST['asignaturas'])) {
 				
 				?>
 				<tr class="text-center">
-					<td><i class="fas fa-file-<?php echo $seleccionada->tipo; ?>"></i><br>(<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</td>
+					<td><i class="fas fa-2x fa-file-<?php echo $seleccionada->tipo; ?>"></i><br>(<?php echo number_format($seleccionada->size/1024,2,".",",");?> Mb)</td>
 					<td><?php echo urldecode($seleccionada->nombre);?></td>
 					<td><?php echo urldecode($seleccionada->descripcion);?></td>
 					<td><?php echo date("d-m-Y", strtotime($seleccionada->creado_ts)); ?></td>
