@@ -7,8 +7,7 @@
 require_once("inc/conDB.php");
 conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
-require("inc/funciones_apuntes.php");
-
+require("inc/funciones.php");
 if (isset($_POST['asignaturas'])) {
 
 // Recoge las filas de documentos para una asignatura concreta.

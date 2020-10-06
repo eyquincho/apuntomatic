@@ -58,6 +58,7 @@ $mostrar_anuncio_url = $pet_anuncio->url;
 $mostrar_anuncio_img = $pet_anuncio->imagen;
 
 // Datos para la cabecera de la página principal
+
 // Archivos subidos por el usuario
 $sql_head_subidas = "SELECT COUNT(id) AS subidas FROM `ap_documentos` WHERE `usuario_id`= ".$_SESSION['id']."";
 $result_head_subidas = mysqli_query($_SESSION['con'],$sql_head_subidas);
@@ -69,6 +70,9 @@ $result_head_descargas = mysqli_query($_SESSION['con'],$sql_head_descargas);
 $head_descargas = mysqli_fetch_assoc($result_head_descargas);
 if ($head_descargas['descargas']==0){$num_descargas_totales = 0;} else {$num_descargas_totales = $head_descargas['descargas'];}
 
+// Archivos descargados por el usuario
+$sql_descargas_propias = mysqli_query($_SESSION['con'],"SELECT SUM(user_downloads) AS descargas FROM `ap_users` WHERE `ID`= ".$_SESSION['id']."");
+$num_descargas_propias = mysqli_fetch_assoc($sql_descargas_propias);
 
 ?>
 <!DOCTYPE html>
@@ -101,7 +105,6 @@ if ($head_descargas['descargas']==0){$num_descargas_totales = 0;} else {$num_des
         <div class="alert alert-danger" role="alert">Estamos trabajando en desplegar completamente la nueva versión de Apuntomatic. Si encuentras algún bug, no dudes en ponerte en contacto. Puedes ver los frentes abiertos <a href="https://github.com/eyquincho/apuntomatic/issues" target="_blank">en GitHub</a></div>
           <!-- Content Row -->
           <div class="row">
-
             <!-- Tarjeta subidas -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
@@ -118,8 +121,23 @@ if ($head_descargas['descargas']==0){$num_descargas_totales = 0;} else {$num_des
                 </div>
               </div>
             </div>
-
-            <!-- Tarjeta descargas -->
+            <!-- Tarjeta descargas propias -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Archivos descargados</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $num_descargas_propias['descargas']; ?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-download fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Tarjeta descargas de tus archivos -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
@@ -129,7 +147,7 @@ if ($head_descargas['descargas']==0){$num_descargas_totales = 0;} else {$num_des
                       <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $num_descargas_totales; ?></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-download fa-2x text-gray-300"></i>
+                      <i class="fas fa-child fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
