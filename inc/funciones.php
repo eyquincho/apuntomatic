@@ -98,7 +98,7 @@ function mostrar_asignatura(){
 // [ADMIN] Mostrar lista Denuncias
 
 function admin_mostrar_lista_denuncias() {
-	$sql_tabla_denuncias = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_denuncias` ORDER BY `id` DESC");    
+	$sql_tabla_denuncias = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_denuncias` WHERE den_resuelto = '0' ORDER BY `id` DESC");    
 	while ($denuncia = mysqli_fetch_object($sql_tabla_denuncias)) {
 		$archivo_denunciado = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_documentos` WHERE `ID` = ". $denuncia->den_archivo . "");
 		$archivo = mysqli_fetch_object($archivo_denunciado);
@@ -107,8 +107,8 @@ function admin_mostrar_lista_denuncias() {
 		echo '<td>' . $denuncia->den_denunciado . '</td>';
 		echo '<td>' . $denuncia->den_denunciante . '</td>';
 		echo '<td>' . date("d-m-Y", strtotime($denuncia->den_fecha)) . '</td>';
-		echo '<td><a href="' . $archivo->file . '"><i class="fas fa-download"></i></a>'; ?>
-			<a href="#" title="Resolver Denuncia" data-target="#resolver_denuncia<?php echo $denuncia->id;?>" data-toggle="modal"><i class="fas fa-question-circle"></i></a></td>
+		echo '<td><a href="' . $archivo->file . '"><i class="fas fa-download fa-2x"></i></a>'; ?>
+			<a href="#" title="Resolver Denuncia" data-target="#resolver_denuncia<?php echo $denuncia->id;?>" data-toggle="modal"><i class="text-info fas fa-question-circle fa-2x"></i></a></td>
 				<!-- Modal editar documento -->
 				<div class="modal fade" id="resolver_denuncia<?php echo $denuncia->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalDenuncia" aria-hidden="true">
 					<div class="modal-dialog">
@@ -122,12 +122,14 @@ function admin_mostrar_lista_denuncias() {
 								<p><strong>Motivo: </strong><?php echo urldecode($denuncia->den_motivo);?></p>
 								<form name="resolver-denuncia" id="resolver-denuncia" action="<?php $_SERVER['PHP_SELF']?>" enctype="multipart/form-data" method="post">
 								<div class="form-group form-check">
-									<input type="checkbox" class="form-check-input" value="confirmar" name="confirmar_borrado_documento_denuncia" id="confirmar_borrado_documento">
-									<label class="form-check-label" for="confirmar_borrado_documento">Confirmo que quiero eliminar el documento</label>
+									<input type="checkbox" class="form-check-input" value="confirmar" name="confirmar_borrado_documento_denuncia" id="confirmar_borrado_documento_denuncia">
+									<label class="form-check-label" for="confirmar_borrado_documento_denuncia">Confirmo que quiero eliminar el documento</label>
+									<input class="btn btn-danger" name="id_documento_denuncia" type="hidden" value="<?php echo $denuncia->den_archivo;?>">
+									<input class="btn btn-danger" name="id_denuncia" type="hidden" value="<?php echo $denuncia->id;?>">
 								</div>
 							</div>
 							<div class="modal-footer">
-									<input class="btn btn-danger" name="enviar_borrado_documento_denuncia" type="submit" data-target="#BorrarDocumentoDenuncia<?php echo $denuncia->id;?>" data-toggle="modal" value="Borrar archivo">
+									<input class="btn btn-danger" name="enviar_borrado_documento_denuncia" type="submit" value="Borrar archivo">
 									<input class="btn btn-info" name="enviar_ignorado_documento_denuncia" type="submit" value="Ignorar denuncia">
 								</form>
 								<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
@@ -140,55 +142,38 @@ function admin_mostrar_lista_denuncias() {
 	}
 }
 
-// [ADMIN] Descartar denuncia
-
-
-// [ADMIN] Borrar archivo denunciado
-
-function gestionar_denuncias() {
+// [ADMIN] Gestionar denuncia
+function admin_gestionar_denuncias() {
 	if(isset($_POST['enviar_borrado_documento_denuncia'])){
 		if(isset($_POST['confirmar_borrado_documento_denuncia'])) {
-			echo "Y el documento ya estaría borrado";
+			eliminar_documento_denuncia();
 		}
 		else {
-			echo "No se confirmó el borrado";
+			echo "<div class=\"alert alert-danger\" role=\"alert\">No se ha podido confirmado el borrado del archivo.</div>";
 		}
-	}else {
-		echo "No se quiere borrar nada";
+	}else {}
+	if(isset($_POST['enviar_ignorado_documento_denuncia'])){
+			$id_denuncia = $_POST['id_denuncia'];
+			$actualizar_denuncia_bd = mysqli_query($_SESSION['con'], "UPDATE ap_denuncias SET den_resuelto = 1 WHERE `id` = '".$id_denuncia."'");
+			echo "<div class=\"alert alert-danger\" role=\"alert\">Se ha ignorado la denuncia</div>";
 	}
 }
 
-function eliminar_documento_Asdasdasd() {
-	if(isset($_POST['enviar_borrado_documento_denuncia'])){
-		if(isset($_POST['confirmar_borrado_documento'])) {
-			$id_archivo = $_POST['eliminar-doc-id'];
+// [ADMIN] Borrar archivo denunciado
+function eliminar_documento_denuncia() {
+			$id_archivo = $_POST['id_documento_denuncia'];
+			$id_denuncia = $_POST['id_denuncia'];
 			$doc_activo_sql="SELECT * FROM `ap_documentos` WHERE id='".$id_archivo."'";
 			$doc_activo_result=mysqli_query($_SESSION['con'], $doc_activo_sql);
 			$doc_activo_sql = mysqli_fetch_object($doc_activo_result);
-			$password=$_POST['clave_borrado_documento'];
-			$password = MD5(stripslashes($password));
-			$pet_oldkey2 = mysqli_query($_SESSION['con'], "SELECT user_pass FROM `ap_users` WHERE `user_nick` = '". $_SESSION['nick'] . "'");
-			$oldkey2 = mysqli_fetch_object($pet_oldkey2);
-			if ($oldkey2->user_pass != $password){
-				echo "<div class=\"alert alert-danger\" role=\"alert\">La contraseña no es correcta.</div>";
+			$ar = $doc_activo_sql->file;
+			$eliminar_archivo = unlink($ar);
+			$borrar_archivo_bd = mysqli_query($_SESSION['con'], "DELETE FROM `ap_documentos` WHERE `id` = '".$id_archivo."'");
+			$actualizar_denuncia_bd = mysqli_query($_SESSION['con'], "UPDATE ap_denuncias SET den_resuelto = 1 WHERE `id` = '".$id_denuncia."'");
+			if ($eliminar_archivo && $borrar_archivo_bd) {
+				echo "<div class=\"alert alert-success\" role=\"alert\">Archivo eliminado correctamente</div>";
+			}	else {
+				echo "<div class=\"alert alert-danger\" role=\"alert\">No se ha podido borrar el archivo.</div>";
 			}
-			else {
-				$ar = $doc_activo_sql->file;
-				$eliminar_archivo = unlink($ar);
-				$borrar_archivo_bd = mysqli_query($_SESSION['con'], "DELETE FROM `ap_documentos` WHERE `id` = '".$id_archivo."'");
-				if ($eliminar_archivo && $borrar_archivo_bd) {
-					echo "<div class=\"alert alert-success\" role=\"alert\">Archivo eliminado correctamente</div>";
-				}	else {
-					echo "<div class=\"alert alert-danger\" role=\"alert\">No se ha podido borrar el archivo.</div>";
-				}
-			
-			}
-		} 
-			else {
-				echo "<div class=\"alert alert-danger\" role=\"alert\">No has confirmado que quieres borrar el documento.</div>";
-			}
-		}else{}
 }
-
-
 ?>

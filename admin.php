@@ -35,7 +35,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
       <div id="content">
     <?php include "header.php" ?>
         <div class="container-fluid">
-        <?php gestionar_denuncias(); ?>
+        <?php admin_gestionar_denuncias(); ?>
           <div class="row">
             <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
