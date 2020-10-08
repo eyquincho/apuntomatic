@@ -176,4 +176,60 @@ function eliminar_documento_denuncia() {
 				echo "<div class=\"alert alert-danger\" role=\"alert\">No se ha podido borrar el archivo.</div>";
 			}
 }
+
+// [ADMIN] Mostrar lista Denuncias
+
+function admin_mostrar_lista_tablon() {
+	$sql_tabla_tablon = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_tablon` WHERE aprobado = '0' ORDER BY `id` DESC");    
+	while ($anuncio_tablon = mysqli_fetch_object($sql_tabla_tablon)) {
+		echo '<tr class="text-center">';
+		echo '<td>' . urldecode($anuncio_tablon->titulo) . '</td>';
+		echo '<td>' . $anuncio_tablon->categoria . '</td>';
+		echo '<td>' . $anuncio_tablon->usuario . '</td>';
+		echo '<td>' . date("d-m-Y", strtotime($anuncio_tablon->fecha_inicio)) . '</td>';
+		echo '<td>' . date("d-m-Y", strtotime($anuncio_tablon->fecha_final)) . '</td>';?>
+			<td><a href="#" title="Resolver Publicación" data-target="#resolver_tablon<?php echo $anuncio_tablon->id;?>" data-toggle="modal"><i class="fas fa-cogs fa-2x"></i></a></td>
+				<div class="modal fade" id="resolver_tablon<?php echo $anuncio_tablon->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalTablon" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="titulo-modal">Resolver anuncio</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">
+								<p><strong>Título: </strong><?php echo urldecode($anuncio_tablon->titulo);?></p>
+								<p><strong>Categoría: </strong><?php echo urldecode($anuncio_tablon->categoria);?></p>
+								<p><strong>Contenido: </strong><?php echo urldecode($anuncio_tablon->contenido);?></p>
+								<form name="resolver-tablon" id="resolver-tablon" action="<?php $_SERVER['PHP_SELF']?>" enctype="multipart/form-data" method="post">
+									<input class="btn btn-danger" name="id_tablon" type="hidden" value="<?php echo $anuncio_tablon->id;?>">
+							</div>
+							<div class="modal-footer">
+									<input class="btn btn-success" name="respuesta_tablon" type="submit" value="Aprobar">
+									<input class="btn btn-danger" name="respuesta_tablon" type="submit" value="Rechazar">
+								</form>
+								<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+							</div>
+						</div>
+					</div>
+				</div>		
+			<?php		
+		echo '</td></tr>'; 
+	}
+}
+
+// [ADMIN] Gestionar tablon
+function admin_gestionar_tablon() {
+	if(isset($_POST['respuesta_tablon'])){
+		switch ($_POST['respuesta_tablon']){
+			case "Aprobar":
+				$actualizar_tablon_bd = mysqli_query($_SESSION['con'], "UPDATE ap_tablon SET aprobado = 1 WHERE `id` = '".$_POST['id_tablon']."'");
+				echo "<div class=\"alert alert-success\" role=\"alert\">Tarjeta aprobada</div>";
+				break;
+			case "Rechazar":
+				$actualizar_tablon_bd = mysqli_query($_SESSION['con'], "DELETE FROM ap_tablon WHERE `id` = '".$_POST['id_tablon']."'");
+				echo "<div class=\"alert alert-danger\" role=\"alert\">Tarjeta rechazada</div>";
+				break;
+		}
+	}
+}
 ?>

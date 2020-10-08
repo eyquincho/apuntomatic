@@ -35,7 +35,10 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
       <div id="content">
     <?php include "header.php" ?>
         <div class="container-fluid">
-        <?php admin_gestionar_denuncias(); ?>
+        <?php
+					admin_gestionar_denuncias();
+					admin_gestionar_tablon();
+				?>
           <div class="row">
             <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
@@ -44,7 +47,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Archivo</th>
@@ -74,39 +77,34 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
             <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Anuncios</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Tablón</h6>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered display" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Doc</th>
-                      <th>Usuario</th>
-                      <th>Documento</th>
-                      <th>Asignatura</th>
-                      <th>Titulación</th>
-                      <th>Enlace</th>
+                      <th>Titulo</th>
+                      <th>Categoria</th>
+											<th>Usuario</th>
+                      <th>Inicio</th>
+                      <th>Final</th>
+											<th>Acciones</th> 											
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Doc</th>
-                      <th>Usuario</th>
-                      <th>Documento</th>
-                      <th>Asignatura</th>
-                      <th>Titulación</th>
-                      <th>Enlace</th>
+                      <th>Titulo</th>
+                      <th>Categoria</th>
+											<th>Usuario</th>
+                      <th>Inicio</th>
+                      <th>Final</th>
+											<th>Acciones</th> 
                     </tr>
                   </tfoot>
                   <tbody>
                     <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
+                      <?php admin_mostrar_lista_tablon(); ?>   
                     </tr>
                     
                   </tbody>
@@ -118,55 +116,7 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
             <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Nombre</th>
-                      <th>Nick</th>
-                      <th>Email</th>
-                      <th>Fecha registro</th>
-                      <th>Enlace</th>
-                      <th>Subidas</th>
-                      <th>Descargas</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>ID</th>
-                      <th>Nombre</th>
-                      <th>Nick</th>
-                      <th>Email</th>
-                      <th>Fecha registro</th>
-                      <th>Enlace</th>
-                      <th>Subidas</th>
-                      <th>Descargas</th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
-                    </tr>
-                    
-                  </tbody>
-                </table>
-              </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-6 col-lg-6">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Documentos</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Publicidad</h6>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
