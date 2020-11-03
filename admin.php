@@ -13,6 +13,26 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
   } else {}
   require("inc/funciones.php");
 
+// Datos para la cabecera de la página principal
+
+// Usuarios totales
+$sql_usuarios_totales = "SELECT COUNT(id) AS num FROM `ap_users`";
+$result_usuarios_totales = mysqli_query($_SESSION['con'],$sql_usuarios_totales);
+$usuarios_totales = mysqli_fetch_assoc($result_usuarios_totales);
+
+// Documentos totales
+$sql_documentos_totales = "SELECT COUNT(id) AS num FROM `ap_documentos`";
+$result_documentos_totales = mysqli_query($_SESSION['con'],$sql_documentos_totales);
+$documentos_totales = mysqli_fetch_assoc($result_documentos_totales);
+
+// Descargas totales
+$sql_descargas_totales = "SELECT SUM(descargas) AS descargas FROM `ap_documentos`";
+$result_descargas_totales = mysqli_query($_SESSION['con'],$sql_descargas_totales);
+$head_descargas_totales = mysqli_fetch_assoc($result_descargas_totales);
+$num_descargas_totales = $head_descargas_totales['descargas'];
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -39,6 +59,57 @@ mysqli_set_charset($_SESSION['con'], 'utf8');
 					admin_gestionar_denuncias();
 					admin_gestionar_tablon();
 				?>
+          <!-- Content Row -->
+          <div class="row">
+            <!-- Tarjeta usuarios -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Usuarios totales</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $usuarios_totales['num']; ?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Tarjeta documentos -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Documentos totales</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $documentos_totales['num']; ?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-copy fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Tarjeta descargas totales -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Descargas totales</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $num_descargas_totales; ?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-download fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <div class="col-xl-6 col-lg-6">
               <div class="card shadow mb-4">
