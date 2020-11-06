@@ -98,7 +98,20 @@ function mostrar_asignatura(){
 // [ADMIN] Mostrar lista Denuncias
 
 function admin_mostrar_lista_denuncias() {
-	$sql_tabla_denuncias = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_denuncias` WHERE den_resuelto = '0' ORDER BY `id` DESC");    
+	$sql_tabla_denuncias = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_denuncias` WHERE den_resuelto = '0' ORDER BY `id` DESC");
+	if (mysqli_num_rows($sql_tabla_denuncias)===0){ echo "No hay denuncias que gestionar";}else{
+		?>
+			<thead>
+				<tr>
+					<th>Archivo</th>
+					<th>Denunciado</th>
+					<th>Denunciante</th>
+					<th>Fecha</th>
+					<th>Opciones</th>
+				</tr>
+			</thead>
+			<tbody>
+		<?php
 	while ($denuncia = mysqli_fetch_object($sql_tabla_denuncias)) {
 		$archivo_denunciado = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_documentos` WHERE `ID` = ". $denuncia->den_archivo . "");
 		$archivo = mysqli_fetch_object($archivo_denunciado);
@@ -140,8 +153,9 @@ function admin_mostrar_lista_denuncias() {
 			<?php
 		echo '</td></tr>'; 
 	}
+	echo '</tbody>';
 }
-
+}
 // [ADMIN] Gestionar denuncia
 function admin_gestionar_denuncias() {
 	if(isset($_POST['enviar_borrado_documento_denuncia'])){
@@ -180,7 +194,21 @@ function eliminar_documento_denuncia() {
 // [ADMIN] Mostrar lista Tablon
 
 function admin_mostrar_lista_tablon() {
-	$sql_tabla_tablon = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_tablon` WHERE aprobado = '0' ORDER BY `id` DESC");    
+	$sql_tabla_tablon = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_tablon` WHERE aprobado = '0' ORDER BY `id` DESC");
+	if (mysqli_num_rows($sql_tabla_tablon)===0){ echo "No hay anuncios que gestionar";}else{
+		?>
+		<thead>
+			<tr>
+				<th>Titulo</th>
+				<th>Categoria</th>
+				<th>Usuario</th>
+				<th>Inicio</th>
+				<th>Final</th>
+				<th>Acciones</th> 											
+			</tr>
+		</thead>
+		<tbody>
+	<?php
 	while ($anuncio_tablon = mysqli_fetch_object($sql_tabla_tablon)) {
 		echo '<tr class="text-center">';
 		echo '<td>' . urldecode($anuncio_tablon->titulo) . '</td>';
@@ -215,6 +243,8 @@ function admin_mostrar_lista_tablon() {
 			<?php		
 		echo '</td></tr>'; 
 	}
+	echo '</tbody>';
+}
 }
 
 // [ADMIN] Gestionar tablon
@@ -239,7 +269,20 @@ function admin_gestionar_tablon() {
 // [ADMIN] Mostrar lista publicidad
 
 function admin_mostrar_lista_publicidad() {
-	$sql_tabla_publicidad = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE aprobado = '0' ORDER BY `id` DESC");    
+	$sql_tabla_publicidad = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE aprobado = '0' ORDER BY `id` DESC");
+	if (mysqli_num_rows($sql_tabla_publicidad)===0){ echo "No hay publicidad que gestionar";}else{
+		?>
+		<thead>
+			<tr>
+				<th>Usuario</th>
+				<th>Descripcion</th>
+				<th>Inicio</th>
+				<th>Final</th>
+				<th>Elementos</th> 											
+			</tr>
+		</thead>
+		<tbody>
+		<?php
 	while ($anuncio_publicidad = mysqli_fetch_object($sql_tabla_publicidad)) {
 		echo '<tr class="text-center">';
 		echo '<td>' . urldecode($anuncio_publicidad->usuario) . '</td>';
@@ -271,6 +314,8 @@ function admin_mostrar_lista_publicidad() {
 			<?php		
 		echo '</td></tr>'; 
 	}
+	echo '</tbody>';
+}
 }
 
 // [ADMIN] Gestionar publicidad

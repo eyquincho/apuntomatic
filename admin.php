@@ -119,28 +119,8 @@ $num_descargas_totales = $head_descargas_totales['descargas'];
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Archivo</th>
-                      <th>Denunciado</th>
-                      <th>Denunciante</th>
-                      <th>Fecha</th>
-                      <th>Opciones</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Archivo</th>
-                      <th>Denunciado</th>
-                      <th>Denunciante</th>
-                      <th>Fecha</th>
-                      <th>Opciones</th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <?php admin_mostrar_lista_denuncias(); ?>                    
-                  </tbody>
+                <table class="table table-bordered" width="100%" cellspacing="0">                  
+                    <?php admin_mostrar_lista_denuncias(); ?>
                 </table>
               </div>
                 </div>
@@ -154,32 +134,7 @@ $num_descargas_totales = $head_descargas_totales['descargas'];
                 <div class="card-body">
                   <div class="table-responsive">
                 <table class="table table-bordered display" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Titulo</th>
-                      <th>Categoria</th>
-											<th>Usuario</th>
-                      <th>Inicio</th>
-                      <th>Final</th>
-											<th>Acciones</th> 											
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Titulo</th>
-                      <th>Categoria</th>
-											<th>Usuario</th>
-                      <th>Inicio</th>
-                      <th>Final</th>
-											<th>Acciones</th> 
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <tr>
-                      <?php admin_mostrar_lista_tablon(); ?>   
-                    </tr>
-                    
-                  </tbody>
+                      <?php admin_mostrar_lista_tablon(); ?>
                 </table>
               </div>
                 </div>
@@ -193,30 +148,7 @@ $num_descargas_totales = $head_descargas_totales['descargas'];
                 <div class="card-body">
                   <div class="table-responsive">
                 <table class="table table-bordered display" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Usuario</th>
-                      <th>Descripcion</th>
-                      <th>Inicio</th>
-                      <th>Final</th>
-											<th>Elementos</th> 											
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Usuario</th>
-                      <th>Descripcion</th>
-                      <th>Inicio</th>
-                      <th>Final</th>
-											<th>Elementos</th> 	
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <tr>
-                      <?php admin_mostrar_lista_publicidad(); ?>   
-                    </tr>
-                    
-                  </tbody>
+                  <?php admin_mostrar_lista_publicidad(); ?>
                 </table>
               </div>
                 </div>
