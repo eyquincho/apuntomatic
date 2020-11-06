@@ -31,8 +31,13 @@ function GuardarAnuncio () {
 			  }
 			}
 		// FIN tratamiento imagen
+		// Revisamos que la url sea absoluta
+		
 		if (!empty($_POST['nuevo_anuncio_url'])) {
 			$url_anuncio = mysqli_real_escape_string($_SESSION['con'], $_POST['nuevo_anuncio_url']);
+				if (strpos($url_anuncio, 'http') === false) {
+					$url_anuncio = 'http://' .$url_anuncio;
+				}
 			}else {
 				$url_anuncio = "#";
 			}
