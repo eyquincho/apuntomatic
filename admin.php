@@ -57,7 +57,8 @@ $num_descargas_totales = $head_descargas_totales['descargas'];
         <div class="container-fluid">
         <?php
 					admin_gestionar_denuncias();
-					admin_gestionar_tablon();
+          admin_gestionar_tablon();
+          admin_gestionar_publicidad();
 				?>
           <!-- Content Row -->
           <div class="row">
@@ -191,37 +192,28 @@ $num_descargas_totales = $head_descargas_totales['descargas'];
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered display" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>ID</th>
-                      <th>Asignatura</th>
-                      <th>Fecha</th>
-                      <th>Nombre</th>
-                      <th>Descargas</th>
-                      <th>Anonimo</th>
-                      <th>Tipo</th>
+                      <th>Usuario</th>
+                      <th>Descripcion</th>
+                      <th>Inicio</th>
+                      <th>Final</th>
+											<th>Elementos</th> 											
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>ID</th>
-                      <th>Asignatura</th>
-                      <th>Fecha</th>
-                      <th>Nombre</th>
-                      <th>Descargas</th>
-                      <th>Anonimo</th>
-                      <th>Tipo</th>
+                      <th>Usuario</th>
+                      <th>Descripcion</th>
+                      <th>Inicio</th>
+                      <th>Final</th>
+											<th>Elementos</th> 	
                     </tr>
                   </tfoot>
                   <tbody>
                     <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td><center><i class="fas fa-file-download"></i> 14 Mb</center></td>
+                      <?php admin_mostrar_lista_publicidad(); ?>   
                     </tr>
                     
                   </tbody>

@@ -177,7 +177,7 @@ function eliminar_documento_denuncia() {
 			}
 }
 
-// [ADMIN] Mostrar lista Denuncias
+// [ADMIN] Mostrar lista Tablon
 
 function admin_mostrar_lista_tablon() {
 	$sql_tabla_tablon = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_tablon` WHERE aprobado = '0' ORDER BY `id` DESC");    
@@ -232,4 +232,61 @@ function admin_gestionar_tablon() {
 		}
 	}
 }
+
+
+
+
+// [ADMIN] Mostrar lista publicidad
+
+function admin_mostrar_lista_publicidad() {
+	$sql_tabla_publicidad = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE aprobado = '0' ORDER BY `id` DESC");    
+	while ($anuncio_publicidad = mysqli_fetch_object($sql_tabla_publicidad)) {
+		echo '<tr class="text-center">';
+		echo '<td>' . urldecode($anuncio_publicidad->usuario) . '</td>';
+		echo '<td>' . date("d-m-Y", strtotime($anuncio_publicidad->fecha_inicio)) . '</td>';
+		echo '<td>' . date("d-m-Y", strtotime($anuncio_publicidad->fecha_final)) . '</td>';
+		echo '<td><a href="' . $anuncio_publicidad->imagen . '"><i class="fas fa-image"></i></a> <a href="' . $anuncio_publicidad->url . '"><i class="fas fa-link"></i></a></td>';?>
+			<td><a href="#" title="Resolver Publicación" data-target="#resolver_publicidad<?php echo $anuncio_publicidad->id;?>" data-toggle="modal"><i class="fas fa-cogs fa-2x"></i></a></td>
+				<div class="modal fade" id="resolver_publicidad<?php echo $anuncio_publicidad->id;?>" tabindex="-1" role="dialog" aria-labelledby="ModalPublicidad" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="titulo-modal">Resolver publicidad</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">
+								<p><strong>Descripción: </strong><?php echo urldecode($anuncio_publicidad->descripcion);?></p>
+								<form name="resolver-publicidad" id="resolver-publicidad" action="<?php $_SERVER['PHP_SELF']?>" enctype="multipart/form-data" method="post">
+									<input class="btn btn-danger" name="id_publicidad" type="hidden" value="<?php echo $anuncio_publicidad->id;?>">
+							</div>
+							<div class="modal-footer">
+									<input class="btn btn-success" name="respuesta_publicidad" type="submit" value="Aprobar">
+									<input class="btn btn-danger" name="respuesta_publicidad" type="submit" value="Rechazar">
+								</form>
+								<a href="#" class="btn" data-dismiss="modal">Cancelar</a>
+							</div>
+						</div>
+					</div>
+				</div>		
+			<?php		
+		echo '</td></tr>'; 
+	}
+}
+
+// [ADMIN] Gestionar publicidad
+function admin_gestionar_publicidad() {
+	if(isset($_POST['respuesta_publicidad'])){
+		switch ($_POST['respuesta_publicidad']){
+			case "Aprobar":
+				$actualizar_publicidad_bd = mysqli_query($_SESSION['con'], "UPDATE ap_publicidad SET aprobado = 1 WHERE `id` = '".$_POST['id_publicidad']."'");
+				echo "<div class=\"alert alert-success\" role=\"alert\">Tarjeta aprobada</div>";
+				break;
+			case "Rechazar":
+				$actualizar_publicidad_bd = mysqli_query($_SESSION['con'], "DELETE FROM ap_publicidad WHERE `id` = '".$_POST['id_publicidad']."'");
+				echo "<div class=\"alert alert-danger\" role=\"alert\">Tarjeta rechazada</div>";
+				break;
+		}
+	}
+}
+
 ?>
