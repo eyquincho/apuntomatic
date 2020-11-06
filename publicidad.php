@@ -16,6 +16,7 @@ function GuardarAnuncio () {
 			$handle = new \Verot\Upload\upload($_FILES['nuevo_anuncio_imagen']);
 			if ($handle->uploaded) {
 			  $handle->file_name_body_pre		= 'anuncio_';
+			  $handle->file_name_body_add 		= date("YmdHis");
 			  $handle->file_safe_name 			= true;
 			  $handle->image_resize         = true;
 			  $handle->image_x              = 500;
@@ -39,7 +40,7 @@ function GuardarAnuncio () {
 		$fecha_inicio = $_POST['nuevo_anuncio_inicio'];
 		$fecha_final = $_POST['nuevo_anuncio_final'];
 		$usuario_anuncio = $_SESSION["nick"];
-		$qry = "INSERT INTO ap_publicidad ( usuario, imagen, url, descripcion, inicio, fin, aprobado ) VALUES
+		$qry = "INSERT INTO ap_publicidad ( usuario, imagen, url, descripcion, fecha_inicio, fecha_final, aprobado ) VALUES
 		('$usuario_anuncio','$imagen_anuncio', '$url_anuncio','$descripcion_anuncio','$fecha_inicio','$fecha_final', '0')";
 		mysqli_query($_SESSION['con'], $qry);
 		echo "<div class=\"alert alert-success\" role=\"alert\">El anuncio se ha enviado para aprobación</div>";
