@@ -54,6 +54,9 @@ function mostrar_lista() {
 // Publicidad
 $sql_anuncio = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE `aprobado`= 1 AND NOW() BETWEEN `fecha_inicio` AND DATE_ADD(`fecha_final`, INTERVAL 1 DAY) ORDER BY RAND() LIMIT 1");
 $pet_anuncio = mysqli_fetch_object($sql_anuncio);
+$update_anuncio = "UPDATE ap_publicidad SET impresiones=(impresiones + 1) WHERE id='$pet_anuncio->id'";
+mysqli_query($_SESSION['con'], $update_anuncio);
+
 $mostrar_anuncio_url = $pet_anuncio->url;
 $mostrar_anuncio_img = $pet_anuncio->imagen;
 
@@ -206,7 +209,7 @@ $num_descargas_propias = mysqli_fetch_assoc($sql_descargas_propias);
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                  <a href="<?php echo $mostrar_anuncio_url; ?>" target="_blank" ><img src="<?php echo $mostrar_anuncio_img; ?>" style="width:100%" /></a>
+                  <a href="<?php echo $mostrar_anuncio_url; ?>" onclick="contadorpubli()" target="_blank" ><img src="<?php echo $mostrar_anuncio_img; ?>" style="width:100%" /></a>
 				  ¿Quieres mostrar algo aqui? Consulta la sección <a href="publicidad.php">Publicidad</a>
                 </div>
               </div>
@@ -243,7 +246,18 @@ $num_descargas_propias = mysqli_fetch_assoc($sql_descargas_propias);
 
   <!-- JavaScript propio -->
   <script src="js/tablas-apuntomatic.js"></script>
+  <script>
+					function contadorpubli() {
+						$.ajax({
+								 type: "POST",
+								 url: <?php echo '\'ajax.php?idpubli='. $pet_anuncio->id.'\''?>,
+								 data:{action:'contarpubli'},
+								 success:function(html) {
+									 alert(html);
+								 }
 
-
+						});
+						}
+	</script>
 </body>
 </html>
