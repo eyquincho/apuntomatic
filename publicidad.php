@@ -8,6 +8,7 @@ include_once("inc/conDB.php");
 conexionDB();
 mysqli_set_charset($_SESSION['con'], 'utf8');
 require("inc/class.upload.php");
+require("inc/funciones.php");
 function GuardarAnuncio () {
 	if (isset($_POST['nuevo_anuncio_enviar'])){
 		// Tratamiento imagen
@@ -103,6 +104,21 @@ function GuardarAnuncio () {
 					Apuntomatic se reserva el derecho a no publicar o eliminar cualquier campaña que considere inapropiada.</br>
 					<hr>
 					Para peticiones especiales, puedes contactarnos por email en <strong>hola@apuntomatic.com</strong>
+                </div>
+              </div>
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Tus campañas</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-bordered display" width="100%" cellspacing="0">
+											<?php usuario_mostrar_lista_publicidad(); ?>
+										</table>
+									</div>
+									Si has creado una campaña y no se muestra aqui, quiere decir que se ha rechazado o eliminado.
                 </div>
               </div>
             </div>

@@ -333,5 +333,55 @@ function admin_gestionar_publicidad() {
 		}
 	}
 }
+?>
+<?php
+/////////////////
+// PUBLICIDAD.PHP //
+/////////////////
+
+// [ADMIN] Mostrar lista publicidad
+
+function usuario_mostrar_lista_publicidad() {
+	$sql_tabla_publicidad = mysqli_query($_SESSION['con'], "SELECT * FROM `ap_publicidad` WHERE usuario = '".$_SESSION['nick']."' ORDER BY `id` DESC");
+	if (mysqli_num_rows($sql_tabla_publicidad)===0){ echo "No has creado ninguna campaña.";}else{
+		?>
+		<thead>
+			<tr>
+				<th>id</th>
+				<th>Estado</th>
+				<th>Descripción</th>
+				<th>Inicio</th>
+				<th>Final</th>
+				<th>Elementos</th>
+				<th>Impresiones</th>
+				<th>Clics</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+	while ($anuncio_publicidad = mysqli_fetch_object($sql_tabla_publicidad)) {
+		if ($anuncio_publicidad->aprobado == "0"){
+			$estado_anuncio = "<td class=\"table-warning\">Pte. Aprobación</td>";
+		}elseif ($anuncio_publicidad->fecha_inicio > date('Y-m-d')){
+			$estado_anuncio = "<td class=\"table-info\">Aún no está activo</td>";
+		}elseif (($anuncio_publicidad->fecha_inicio <= date('Y-m-d')) && ($anuncio_publicidad->fecha_final >=date('Y-m-d')))    {
+			$estado_anuncio = "<td class=\"table-success\">Anuncio activo</td>";
+		}elseif ($anuncio_publicidad->fecha_final < date('Y-m-d'))    {
+			$estado_anuncio = "<td class=\"table-danger\">Campaña finalizada</td>";
+		}
+		echo '<tr class="text-center">';
+		echo '<td>#' . urldecode($anuncio_publicidad->id) . '</td>';
+		echo $estado_anuncio;
+		echo '<td>' . urldecode($anuncio_publicidad->descripcion) . '</td>';		
+		echo '<td>' . date("d-m-Y", strtotime($anuncio_publicidad->fecha_inicio)) . '</td>';
+		echo '<td>' . date("d-m-Y", strtotime($anuncio_publicidad->fecha_final)) . '</td>';
+		echo '<td><a href="' . $anuncio_publicidad->imagen . '"><i class="fas fa-image"></i></a> <a href="' . $anuncio_publicidad->url . '"><i class="fas fa-link"></i></a></td>';
+		echo '<td>' . urldecode($anuncio_publicidad->impresiones) . '</td>';
+		echo '<td>' . urldecode($anuncio_publicidad->clics) . '</td>';
+		echo '</td></tr>'; 
+	}
+	echo '</tbody>';
+}
+}
 
 ?>
