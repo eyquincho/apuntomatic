@@ -39,11 +39,7 @@ function mostrar_lista() {
 				$.ajax({
 						 type: "POST",
 						 url: <?php echo '\'descargar.php?id='. $seleccionada->id.'\''?>,
-						 data:{action:'contar'},
-						 success:function(html) {
-							 alert(html);
-						 }
-
+						 data:{action:'contar'}
 				});
 				}
 		</script>
@@ -251,11 +247,7 @@ $num_descargas_propias = mysqli_fetch_assoc($sql_descargas_propias);
 						$.ajax({
 								 type: "POST",
 								 url: <?php echo '\'ajax.php?idpubli='. $pet_anuncio->id.'\''?>,
-								 data:{action:'contarpubli'},
-								 success:function(html) {
-									 alert(html);
-								 }
-
+								 data:{action:'contarpubli'}
 						});
 						}
 	</script>

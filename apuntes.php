@@ -42,11 +42,7 @@ if (isset($_POST['asignaturas'])) {
 						$.ajax({
 								 type: "POST",
 								 url: <?php echo '\'descargar.php?id='. $seleccionada->id.'\''?>,
-								 data:{action:'contar'},
-								 success:function(html) {
-									 alert(html);
-								 }
-
+								 data:{action:'contar'}
 						});
 						}
 				</script>
