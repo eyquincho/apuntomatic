@@ -1,14 +1,5 @@
 # Apuntomatic
 
+**Este proyecto ya no está en desarrollo y deja mucho que desear, puedes utilizarlo para consulta pero en ningún caso es aconsejable su uso en producción sin un buen lavado de cara.**
+
 Repositorio de la web Apuntomatic.com
-
-Todavía quedan muchos flecos por solucionar. [Issues](https://github.com/eyquincho/apuntomatic/issues)
-
-Toda colaboración es bienvenida
-
-# Librerías
-- [jQuery](https://jquery.com/)
-- [Bootstrap](https://getbootstrap.com/)
-- [dataTables](https://datatables.net/)
-- [Font Awesome](https://fontawesome.com/)
-- [Class.upload](https://github.com/verot/class.upload.php)
